@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>dein.fr</title><link href="http://www.dein.fr/" rel="alternate"></link><link href="http://www.dein.fr/feeds/all.atom.xml" rel="self"></link><id>http://www.dein.fr/</id><updated>2019-09-06T16:26:13+02:00</updated><subtitle>Charles-Axel Dein's personal website</subtitle><entry><title>Test coverage only matters if it's at 100%</title><link href="http://www.dein.fr/2019-09-06-test-coverage-only-matters-if-at-100-percent.html" rel="alternate"></link><published>2019-09-06T16:26:13+02:00</published><updated>2019-09-06T16:26:13+02:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2019-09-06:/2019-09-06-test-coverage-only-matters-if-at-100-percent.html</id><summary type="html">&lt;p&gt;all lines of code should be covered by a test or explicitly excluded from test coverage.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Summary&lt;/strong&gt;: all lines of code should be covered by a test or &lt;em&gt;explicitly&lt;/em&gt;
+excluded from test coverage.&lt;/p&gt;
+&lt;p&gt;What's your test coverage? What do you consider a good test coverage
+percentage?&lt;/p&gt;
+&lt;p&gt;Those questions often get asked during engineering interviews.
+It gives the interviewee a sense of how much the company cares about quality.
+It's also a good question for the candidate because you can't have a cargo
+cult answer. You need to argue. It gives useful insights into one's quality
+mindset.&lt;/p&gt;
+&lt;p&gt;I believe the only right value to track for a test coverage metric is 100% of
+the &lt;em&gt;lines that should be covered&lt;/em&gt; (&lt;em&gt;not&lt;/em&gt; the lines that are written), which
+ensures that the lines that you don't want to cover are explicit, and not
+implicit.&lt;/p&gt;
+&lt;p&gt;Please don't skim the articles as you'll find that the point I'm making is pretty common sense. If you still disagree have a look at the response
+to common objections at the end.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: I'm using Python for all the examples below, but the principles are
+applicable regardless of the programming language.&lt;/em&gt;&lt;/p&gt;
+&lt;h2&gt;Why you should measure test coverage&lt;/h2&gt;
+&lt;p&gt;If you're not already monitoring test coverage, you should probably start now
+(if you don't have tests, that's for another article). Some programming
+languages have better support than others. Python has excellent support for it,
+through &lt;code&gt;pytest&lt;/code&gt; and &lt;code&gt;pytest-cov&lt;/code&gt; (using &lt;code&gt;coverage&lt;/code&gt; under the hood).&lt;/p&gt;
+&lt;h3&gt;Test all functionality&lt;/h3&gt;
+&lt;p&gt;Test coverage allows you to check which lines of code are run while the tests
+are executed. If some lines are missing coverage, it means you're not testing
+("covering") the underlying behavior. You could introduce a bug, and no test
+would fail, which is not desirable. Introducing a bug should ideally trigger a
+test to fail.&lt;/p&gt;
+&lt;p&gt;Let's see a contrived example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="o"&gt;...&lt;/span&gt;
+        &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;  &lt;span class="c1"&gt;# let&amp;#39;s say a bug is hidden here&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_toast&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The test will pass, even though &lt;code&gt;toast("brioche")&lt;/code&gt; should fail. Adding
+a test for this case will let you find the &lt;code&gt;ZeroDivisionError&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;Ensure all tests are run&lt;/h3&gt;
+&lt;p&gt;Another case for checking is that you want to make sure that your test actually
+run. In this contrived example, the tests will pass, even though one of
+those test does not do anything:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;identity&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_identity&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;identity&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_identity_noop&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# this is a contrived example, there shouldn&amp;#39;t be any &amp;#39;if&amp;#39; in tests&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;identity&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Once you've agreed that you need test coverage, the question remains: what is the
+right level of coverage? It is very costly to ensure that absolutely every line
+of code is tested. Should it be 80%? 90%?&lt;/p&gt;
+&lt;h2&gt;Why you should check for 100% coverage&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;TOTAL&lt;/span&gt;                                      &lt;span class="mi"&gt;18435&lt;/span&gt;     &lt;span class="mi"&gt;16&lt;/span&gt;   &lt;span class="mi"&gt;1742&lt;/span&gt;      &lt;span class="mi"&gt;0&lt;/span&gt;    &lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
+
+&lt;span class="n"&gt;FAIL&lt;/span&gt; &lt;span class="n"&gt;Required&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="n"&gt;coverage&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="k"&gt;not&lt;/span&gt; &lt;span class="n"&gt;reached&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Total&lt;/span&gt; &lt;span class="n"&gt;coverage&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;86&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;100% is clear cut.&lt;/p&gt;
+&lt;p&gt;Enforcing 100% coverage requires you to be explicit about the lines that don't
+have to be covered ("explicit is better than implicit"). By including the &lt;code&gt;no
+cover&lt;/code&gt; marker (or whatever your language/coverage lib supports) next to the
+code that is excluded from coverage, you allow code reviewers to see your
+coverage decisions, and challenge them.&lt;/p&gt;
+&lt;p&gt;The problem with having a goal that is not 100% is that it leaves room for
+interpretation and negotiation. If we're currently at 80% and I bring coverage
+at 79.9% because I'm too lazy to test my code (or exclude it from coverage),
+then can't we say that it's ok? Explicit markers in the code make the
+discussion more factual and objective.&lt;/p&gt;
+&lt;p&gt;The other problem with something different from 100% is that you might be
+adding coverage in one area, and reducing it in another, without knowing it. It
+might still lead to 80% coverage - but the reduction in coverage might have
+appeared in a crucial area of your code.&lt;/p&gt;
+&lt;h2&gt;Will 100% coverage prevent any bug from being introduced?&lt;/h2&gt;
+&lt;p&gt;Of course not. Just because a line is run in a test does not mean it is 100%
+correct. You might not be testing all variations. The test might assert the
+wrong thing.&lt;/p&gt;
+&lt;p&gt;Some lines of code should be tested twice to ensure they're correct. See this
+contrived example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;can_toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;croissant&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="c1"&gt;# this line is covered&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_can_toast&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;can_toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;All the lines are covered, but I'm not testing that you can't toast &lt;code&gt;"brioche"&lt;/code&gt;
+and &lt;code&gt;"baguette"&lt;/code&gt;. Let's say this behavior is critical (toasting a croissant is
+a crime!). Without another test, somebody could change the code like this, and
+nothing would break.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;can_toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;bool&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;  &lt;span class="c1"&gt;# this line is still covered&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_can_toast&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;can_toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Therefore sometime you definitely should test the same line more than once,
+testing the failure case and the success case. I'd strongly recommend this for
+permission checking for instance.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_can_toast&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;can_toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_can_toast_cannot&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;can_toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;croissant&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Is this realistic?&lt;/h3&gt;
+&lt;p&gt;You don't need to cover 100% of the lines you write. Some are not worth
+covering as you'll see in the examples below. However, you need to cover 100% of the
+lines &lt;strong&gt;you want to be covered&lt;/strong&gt;. You need to be explicit about excluding lines
+from coverage. Tools such as Python's &lt;code&gt;coverage&lt;/code&gt; allow you to specify which
+line should be excluded from the coverage.&lt;/p&gt;
+&lt;p&gt;Using &lt;code&gt;pytest-cov&lt;/code&gt; you can achieve this pretty simply:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;PLUGGED&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;PLUGGED&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
+
+    &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_toast&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;bread&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;With this setup, test coverage will be at 100% even though we did not test the
+case where the toaster is not plugged because it is too simple. Writing a test
+for this "functionality" would not be worth it. Therefore we explicitly exclude
+it from coverage. You should revisit this decision if it becomes more complex
+and needs to be tested.&lt;/p&gt;
+&lt;h2&gt;What can/should be excluded from coverage?&lt;/h2&gt;
+&lt;p&gt;It depends on your codebase and your quality expectations. Also, as
+for any rules, there are exceptions. Examples are writing using Python, but this
+is not language-dependent.&lt;/p&gt;
+&lt;h3&gt;Simple error handling&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover - the handling is too obvious&lt;/span&gt;
+        &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;no bread provided&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Anything more complicated than that should probably be covered.&lt;/p&gt;
+&lt;h3&gt;Proxy functions&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;external_lib&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Toaster&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover - we&amp;#39;re just proxying&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;Toaster&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It also applies to thin wrappers you might have in front of your
+dependencies.&lt;/p&gt;
+&lt;h3&gt;Code as configuration&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_temperature&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover - no complexity there&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+    &lt;span class="k"&gt;elif&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;
+
+    &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Simple early return/continue&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;breads&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;List&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;breads&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover - simple early continue&lt;/span&gt;
+            &lt;span class="k"&gt;continue&lt;/span&gt;
+
+        &lt;span class="o"&gt;...&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If the early return/continue is part of the logic, or leads to complicated side
+effects, it should be tested.&lt;/p&gt;
+&lt;h3&gt;Code that is too difficult to test (rare)&lt;/h3&gt;
+&lt;p&gt;In rare cases, it is a perfectly fine decision to exclude some code from
+coverage if the tests are too expensive to write (because of the required
+setup, or the use of an external library, for instance). Again - this should
+only be in rare cases, for instance when you're using an external library that
+is not easy to mock. In most cases, if your code is complicated to test that
+probably means it needs to be refactored - easy-to-test code is usually better
+designed.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;packagea&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;packageb&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover - too complicated to test&lt;/span&gt;
+    &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;expensive_function_that_needs_to_be_mocked&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;expensive_function_that_needs_to_be_mocked&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;  &lt;span class="c1"&gt;# lots of code&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Make sure that this code is easy to test manually, and that the code calling it
+is well tested.&lt;/p&gt;
+&lt;h3&gt;Debugging/manual test code&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+
+&lt;span class="n"&gt;DEBUG&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;DEBUGGING&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;p&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;DEBUG&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover - debugging code&lt;/span&gt;
+        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;toasting &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;What should be covered&lt;/h2&gt;
+&lt;p&gt;Here's a list of things that should be covered, ideally more than
+once.&lt;/p&gt;
+&lt;h3&gt;Branches&lt;/h3&gt;
+&lt;p&gt;If your language supports it, make sure you test all branches:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;        &lt;span class="c1"&gt;# 1&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;          &lt;span class="c1"&gt;# 2&lt;/span&gt;
+        &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;toasted_baguette&amp;quot;&lt;/span&gt;   &lt;span class="c1"&gt;# 3&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt;                     &lt;span class="c1"&gt;# 4&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_toast_baguette&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;toasted_baguette&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You're technically at 100% code coverage, but the case where &lt;code&gt;bread&lt;/code&gt; is not
+"baguette" and the &lt;code&gt;if&lt;/code&gt; is never evaluated to False: line 2 never jumps to line
+4. If you activate branch coverage, it will be flagged as a partial branch, and
+   coverage won't be at 100%. To fully test it, you'll need:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;        &lt;span class="c1"&gt;# 1&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;          &lt;span class="c1"&gt;# 2&lt;/span&gt;
+        &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;toasted_baguette&amp;quot;&lt;/span&gt;   &lt;span class="c1"&gt;# 3&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt;                     &lt;span class="c1"&gt;# 4&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_toast_baguette&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;toasted_baguette&amp;quot;&lt;/span&gt;  &lt;span class="c1"&gt;# 2 -&amp;gt; 3 -&amp;gt; 4&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_toast_other&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;  &lt;span class="c1"&gt;# 2 -&amp;gt; 4&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As shown in this example, this lets you test more functionality, thus reducing
+the probability of bugs.&lt;/p&gt;
+&lt;h3&gt;Security: permission check, input sanitization...&lt;/h3&gt;
+&lt;p&gt;Anything that relates to security should be heavily tested, with all sorts of
+inputs.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;re&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pytest&lt;/span&gt;
+
+&lt;span class="n"&gt;REGEX&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;[a-z]+&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;match&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;REGEX&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;match&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Invalid bread variant&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_toast_fail&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;  &lt;span class="c1"&gt;# note: you can use pytest&amp;#39;s parametrize feature here.&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pytest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;raises&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;12&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pytest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;raises&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;@#*$&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pytest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;raises&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;script&amp;gt;window.alert(&amp;#39;hello world!&amp;#39;)&amp;lt;/script&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pytest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;raises&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;#39;; DROP TABLE users;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Complex error handling&lt;/h3&gt;
+&lt;p&gt;If error handling is sophisticated enough and can be considered a feature (e.g.
+recovering gracefully from some error) - it needs to be covered.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pytest&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;doubles&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;expect&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;toaster&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unplug&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="n"&gt;toaster&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cleanup&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_toast_fail&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;expect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;toaster&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unplug&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;expect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;toaster&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cleanup&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pytest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;raises&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;toaster&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;New functionality (even for proof-of-concept)&lt;/h3&gt;
+&lt;p&gt;While it might be tempting to exclude new prototyping code from coverage, I
+think it's a bad idea because that's one more thing to remember and track.
+Moreover, once a feature is shipped, we usually move on to the next feature and
+never clean up our tests. So, it's safer to get into the habit of covering all
+new code.&lt;/p&gt;
+&lt;h2&gt;How to get to 100%&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Start tracking and displaying the test coverage. Make it easy to find
+   uncovered lines (for instance with an HTML report). Have an open discussion
+   with your team.&lt;/li&gt;
+&lt;li&gt;Ensure all new code is fully covered, and that coverage can only strictly
+   increase. Some Github bots let you enforce this.&lt;/li&gt;
+&lt;li&gt;Before writing new code, check the coverage of the existing functionality,
+   and bring it to 100%. Try to structure your tests so that running a single
+   test file (e.g. &lt;code&gt;test_toaster.py&lt;/code&gt;) will cover 100% of its associated code
+   file (&lt;code&gt;toaster.py&lt;/code&gt;). It allows for quicker iterations.&lt;/li&gt;
+&lt;li&gt;Once you're at 100%, use your preferred tool's configuration to fail the
+   tests if coverage is not 100%.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Coverage&lt;/span&gt; &lt;span class="n"&gt;HTML&lt;/span&gt; &lt;span class="n"&gt;written&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;dir&lt;/span&gt; &lt;span class="n"&gt;htmlcov&lt;/span&gt;
+
+&lt;span class="n"&gt;Required&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="n"&gt;coverage&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;reached&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Total&lt;/span&gt; &lt;span class="n"&gt;coverage&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Answer to common objections&lt;/h2&gt;
+&lt;h3&gt;100% test coverage does not mean you're testing everything right.&lt;/h3&gt;
+&lt;p&gt;Absolutely - this point is explicitly stated in this article. I even give an
+example situation showing how just checking the test coverage leads to missing
+an important test.&lt;/p&gt;
+&lt;p&gt;100% test coverage does not make your code invulnerable, and it should
+evidently not be your only metric. This article is only about the test coverage
+metric.&lt;/p&gt;
+&lt;h3&gt;A test suite that covers 80% is pretty good&lt;/h3&gt;
+&lt;p&gt;Absolutely. It is a good number and a good goal for any
+codebase.&lt;/p&gt;
+&lt;p&gt;However, what about that remaining 20 %? Why are they not tested? Will it be clear
+in 2 months why they were not tested? In 6 months? In a year? While it may make
+perfect sense not to test them, you should be explicit about that decision and
+keep the reason in the code.&lt;/p&gt;
+&lt;p&gt;If you don't keep the test coverage &lt;em&gt;metric&lt;/em&gt; at 100%, then you leave it up to the
+code reviewer to challenge your test coverage assumption.&lt;/p&gt;
+&lt;h3&gt;100% is a blanket rule that leaves no room for negotiation&lt;/h3&gt;
+&lt;p&gt;Once again, the goal is not to cover 100% of the lines of code - it would be
+almost impossible. Thanks to &lt;code&gt;no cover&lt;/code&gt; markers, you can still decide to
+exclude code from coverage. It actually makes this negotiation explicit in the
+code, as opposed to implicit during the code review phase coverage.&lt;/p&gt;
+&lt;p&gt;Consider the example below:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Let's say you're fixing a bug in this code, and you find out that the &lt;code&gt;if&lt;/code&gt;
+branch is not covered. You're left to wonder why. The developer did not have
+enough time? They decided it was too trivial to need a test?&lt;/p&gt;
+&lt;p&gt;With an explicit marker, the intent is clear and gives you insight with what is
+considered appropriate coverage for &lt;em&gt;this&lt;/em&gt; codebase:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover, trivial error case&lt;/span&gt;
+        &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;It is not feasible in an old codebase&lt;/h3&gt;
+&lt;p&gt;Right, that's probably the case. However, this is not different from proper
+testing, monitoring, logging practices. Decide if it's important, then start
+with something attainable that brings you closer to the goal, and iterate.&lt;/p&gt;
+&lt;p&gt;Also, if it is not a desirable goal for the codebase, then for sure don't monitor
+test coverage!&lt;/p&gt;
+&lt;h3&gt;Enforcing 100% test coverage leads to bad tests&lt;/h3&gt;
+&lt;p&gt;It bears repeating: this is not about testing 100% of the lines; this is about
+keeping the code coverage metric at 100%. I am not sure how that would lead to
+bad tests.&lt;/p&gt;
+&lt;p&gt;Putting too much focus on one particular metric might lead to gaming behavior.
+That does not mean that no metric you should be enforced. I believe that there
+isn't enough material and training about what it takes to write good tests.
+This is beneficial regardless of whether you enforce test coverage. Also, the
+more you talk about test coverage, the more you iterate and learn about
+what it takes to write good tests in your language and codebase.&lt;/p&gt;
+&lt;p&gt;What's sure is that it is straightforward to write bad tests. It takes a lot of
+skills, experience, and hygiene to write great, maintainable tests. That's a
+topic for another article.&lt;/p&gt;
+&lt;h3&gt;100% coverage only matters for languages without a type checker&lt;/h3&gt;
+&lt;p&gt;No. Sure, a type checker might catch some classes of bugs that would require a
+test in a language without type checking, but you still need to test
+correctness (among others).&lt;/p&gt;
+&lt;h3&gt;You're creating blind spots&lt;/h3&gt;
+&lt;p&gt;Unless you're reviewing your test coverage report after every single commit,
+leaving explicit markers in the code and keeping the metric at 100% is actually
+a much safer practice.&lt;/p&gt;
+&lt;p&gt;When working in code that has been excluded, you'll immediately see the &lt;code&gt;no
+cover&lt;/code&gt; marker, perhaps with a comment explaining why the code is excluded. This lets you reconsider the coverage decision.&lt;/p&gt;
+&lt;p&gt;Any regression in coverage will break the tests.&lt;/p&gt;
+&lt;h3&gt;You should not exclude code from coverage because of setup cost&lt;/h3&gt;
+&lt;p&gt;This article is not about end-to-end vs. unit testing. I have provided some
+examples of code that I sometimes exclude from testing, but your mileage may
+vary.&lt;/p&gt;
+&lt;h2&gt;Changelog&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;09/07/2019: added answer to common objections&lt;/li&gt;
+&lt;li&gt;09/06/2019: added summary, clarified that not testing complicated should only
+  apply to extreme cases and a few other points.&lt;/li&gt;
+&lt;/ul&gt;</content><category term="code"></category></entry><entry><title>The great microservices migration</title><link href="http://www.dein.fr/2017-10-19-the-great-microservices-migration.html" rel="alternate"></link><published>2017-10-19T13:38:56+02:00</published><updated>2017-10-19T13:38:56+02:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2017-10-19:/2017-10-19-the-great-microservices-migration.html</id><summary type="html">&lt;p&gt;How did Uber go from a 450,000 lines monolithic Python application to more than 1,000 microservices?&lt;/p&gt;</summary><content type="html">&lt;p&gt;How did Uber go from a 450,000 lines monolithic Python application to more than 1,000 microservices? This short presentation focuses on the technical aspects of this 5-year migration, and concludes with its cultural and management challenges.&lt;/p&gt;
+&lt;p&gt;I did this talk at the &lt;a href="https://devfest.gdgnantes.com/"&gt;DevFest&lt;/a&gt; 2017 in Nantes, France.&lt;/p&gt;
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/O25xbCq_LFU?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;script async class="speakerdeck-embed" data-id="61e701c03a7440b680367ef80c6c5ac5" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"&gt;&lt;/script&gt;
+
+&lt;p&gt;Feel free to also checkout my &lt;a href="https://github.com/charlax/professional-programming"&gt;professional-programming repo on Github&lt;/a&gt; which compiles a list of useful resources for programmers.&lt;/p&gt;</content><category term="code"></category></entry><entry><title>Negative feedback antipatterns</title><link href="http://www.dein.fr/2016-12-02-negative-feedback-antipatterns.html" rel="alternate"></link><published>2016-12-02T12:07:19+01:00</published><updated>2016-12-02T12:07:19+01:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2016-12-02:/2016-12-02-negative-feedback-antipatterns.html</id><summary type="html">&lt;p&gt;Untargeted feedback. Things you can't impact. Things you didn't do.  Unspecific feedback. Only positives. The feedback sandwich.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="feedback_calvin_hobbes.jpg" src="https://s18.postimg.org/90swa1sq1/feedback_calvin_hobbes.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Calvin and Hobbes&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;This article is also available as a &lt;a href="https://speakerdeck.com/charlax/how-to-give-feedback"&gt;presentation&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;script async class="speakerdeck-embed" data-id="cd52f1dd8aac431c864903af4b44f1d9" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"&gt;&lt;/script&gt;
+
+&lt;p&gt;Uber practices "T3B3", which encourages everyone to share feedback regularly with their peers and their manager. The feedback format is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;"Ts": 3 things that the person does well&lt;/li&gt;
+&lt;li&gt;"Bs": 3 things that they can improve on&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I will be focusing on the latter category in this post, identifying a few redirecting feedback antipatterns I've seen. Examples will be about software engineering but can easily be transferred to another area.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: "negative feedback" is not a particularly good expression - I usually prefer "redirecting feedback".&lt;/em&gt;&lt;/p&gt;
+&lt;h1&gt;Introduction to giving redirecting feedback&lt;/h1&gt;
+&lt;p&gt;Giving negative/redirecting feedback is a vital skill you'll need for your whole life. It's not a skill that is only useful in the workplace - you're already giving feedback to your friends and family members. Why not learn to be better at it?&lt;/p&gt;
+&lt;h2&gt;Book recommendation&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.amazon.com/Crucial-Conversations-Talking-Stakes-Second/dp/1469266822"&gt;Crucial Conversations: Tools for Talking When Stakes Are High&lt;/a&gt; is the classic reference on this topic. I recommend reading it. It's a bit repetitive though - you can find some good summaries on the web.&lt;/p&gt;
+&lt;p&gt;Another similar school of thought on the topic is &lt;strong&gt;non-violent communication&lt;/strong&gt; (&lt;a href="https://en.wikipedia.org/wiki/Nonviolent_Communication"&gt;wikipedia&lt;/a&gt;). The book that lays out the method is &lt;a href="https://www.amazon.com/Nonviolent-Communication-Language-Life-Changing-Relationships-ebook/dp/B014OISVU4/ref=sr_1_1?s=books&amp;amp;ie=UTF8&amp;amp;qid=1480675015&amp;amp;sr=1-1&amp;amp;keywords=non+violent"&gt;Nonviolent Communication: A Language of Life, 3rd Edition: Life-Changing Tools for Healthy Relationships&lt;/a&gt;. It provides a similar model as Crucial Conversations.&lt;/p&gt;
+&lt;h2&gt;My feedback model: OFNR&lt;/h2&gt;
+&lt;p&gt;Here's the model I follow to deliver feedback (it's the non-violent communication one).&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;O&lt;/strong&gt;bservation of a fact. A fact is rarely controversial, so it's a great way to start a conversation.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;F&lt;/strong&gt;eeling: express your feelings and your story. Clarify that it's your story.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;N&lt;/strong&gt;eed: state what you value, or the kind of impact you'd like to see.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;R&lt;/strong&gt;equest: explain what concrete action the person who's receiving the feedback would need to take.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;E.g.:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[Fact] You said during the review meeting that the wifi-enabled toaster's code was "a piece of shitty spaghetti code". [Story] I think people were put off by that comment, and I felt a bit demotivated because I had spent so much time on it. [Need] We need team members to deliver concerns in a respectful and constructive manner. [Request] You should have proposed some concrete ways we can improve the code, for instance a different code architecture, examples of refactor to take on, and holding people accountable for code quality.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Concrete ways to train&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;The best way to learn to deliver good negative feedback is to &lt;strong&gt;start by being great at delivering positive feedback&lt;/strong&gt;, because there's less barriers to do so. Train yourself to use the model above to deliver positive/reinforcing feedback.&lt;/li&gt;
+&lt;li&gt;Write the feedback down and &lt;strong&gt;hold yourself accountable&lt;/strong&gt; to deliver it. Often we either forget about the feedback itself, or because we have to think too much about the delivery model, we never actually deliver it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Don't deliver it in public&lt;/strong&gt; unless you know exactly what you're doing. Make it safe for the other person to receive it, and for you to fail at delivering it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Acknowledge that you're trying&lt;/strong&gt; to improve your delivery. Start the feedback session with "I'm not great at delivering feedback, so I'm using this new model since a couple days. Tell me how I'm doing".&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Acknowledge when you failed&lt;/strong&gt; to deliver it properly. "I'm sorry - I did not deliver this well and I've hurt your feelings. Let me try again."&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Antipatterns&lt;/h1&gt;
+&lt;p&gt;Let's look at a few antipatterns.&lt;/p&gt;
+&lt;h2&gt;The "Untargeted feedback" antipattern&lt;/h2&gt;
+&lt;p&gt;This is a pretty classical one. Here's an example:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Our team could have been faster at shipping this wifi-enabled toaster.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;It's totally unclear how this piece of feedback applies to the individual in question. I usually write my feedback writing with the second person ("you"), and then I quickly sanity check that I'm using it in the redirecting feedback section. This way I'm sure the feedback is targeted to this person.&lt;/p&gt;
+&lt;p&gt;Better:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;During the kick-off meeting for the wifi-enabled toaster project, &lt;strong&gt;you&lt;/strong&gt; did not clarify that there was a strict timeline behind it. As a result, we missed our customer's expectation and delivered late.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;The "Things you can't impact anyway" antipattern&lt;/h2&gt;
+&lt;p&gt;A very common antipattern is to talk about things that the feedback receiver has no impact on.&lt;/p&gt;
+&lt;p&gt;E.g. (assuming the feedback receiver is an hardware engineer):&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The toaster was missing a key feature: toasting an image of the weather on the bread.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This feedback is totally pointless if the feedback receiver has no impact on feature prioritization. Or, if they have, it needs to be made clear in the feedback (see "Untargeted feedback").&lt;/p&gt;
+&lt;h2&gt;The "I'll only talk about things you didn't do" antipattern&lt;/h2&gt;
+&lt;p&gt;It can be tempting to make the Ts very insightful and specific, and to keep Bs evasive (human beings tend to not like giving redirecting feedback). Here's a classical example:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;T1: You did ... which resulted in ...&lt;/p&gt;
+&lt;p&gt;T2: You did ... which resulted in ...&lt;/p&gt;
+&lt;p&gt;T3: You did ... which resulted in ...&lt;/p&gt;
+&lt;p&gt;B1: You could have done more hiring.&lt;/p&gt;
+&lt;p&gt;B2: You could have done more training.&lt;/p&gt;
+&lt;p&gt;B3: You could have done more mentoring.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;While it's not necessarily a bad idea to talk about things the receiver did not do, it's not very helpful if that's the only feedback there is. What's more, the impact of those things missing is usually not laid out for the receiver, which makes the feedback even harder to receive.&lt;/p&gt;
+&lt;p&gt;I recommend to have at least two items which are about concrete things the person did, but could have done better. This will be much more actionable. Then you can have one or two "stretch" Bs, i.e. pieces of feedback that focus on things your interlocutor could have done more of. In that case, make sure to clarify why they were part of your expectations, and how it could have been done (e.g. better time prioritization, delegation).&lt;/p&gt;
+&lt;p&gt;E.g.:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;B1: Yesterday, you said X but did Y.&lt;/p&gt;
+&lt;p&gt;B2: You decided to keep working on adding bluetooth to the toaster, even though we decided against it. ...&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;The "Let's not be specific" antipattern&lt;/h2&gt;
+&lt;p&gt;E.g.:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You sometimes tend to cut corner and sacrifice quality over speed.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Not only this misses an example, but it reads as a personal attack. It is very improbable that the person will react well and find it constructive. Always start with one or two examples, and make sure you link them very concretely to one of the receiver's action.&lt;/p&gt;
+&lt;p&gt;Better:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;During the toaster project, you decided to not spend any time on manual testing, relying on other people to test your code. As a result, a number of bugs (including ticket T000 and T001) were introduced, and led to a decrease in the product's quality.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;The "Ts but no Bs" antipattern&lt;/h2&gt;
+&lt;p&gt;E.g.:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;T1: ...&lt;/p&gt;
+&lt;p&gt;T2: ...&lt;/p&gt;
+&lt;p&gt;T3: ...&lt;/p&gt;
+&lt;p&gt;B1: ...&lt;/p&gt;
+&lt;p&gt;B2: Sorry I don't have any.&lt;/p&gt;
+&lt;p&gt;B3: Sorry I don't have any.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A good rule of thumb is that if you have enough context to give three positive feedback, you need to be able to give three pieces of redirecting feedback. While positive feedback gives a good "tap on the back", negative/redirecting feedback helps us grow. You're actually not helping the receiver if you don't give them actionable and concrete feedback.&lt;/p&gt;
+&lt;h2&gt;The "Feedback sandwich" antipattern&lt;/h2&gt;
+&lt;p&gt;E.g.:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You did an amazing work with the toaster's admin panel. You did not take into consideration accessibility though - which means that our handicapped users won't be able to use it. But the look and feel of the icons is amazing!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The idea behind the feedback sandwich is to soften the blow by putting the piece of redirecting feedback between two positive ones.&lt;/p&gt;
+&lt;p&gt;It's an antipattern because it makes the overall point much weaker, and as a result, will decrease its effectiveness with the receiver. Compare with:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You did not take into consideration accessibility in the toaster's admin panel - which means that our handicapped users won't be able to use it.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The point is much more direct and focused.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;Try the OFNR model in your next feedback session!&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Did you like this article? Check out my &lt;a href="https://github.com/charlax/engineering-management"&gt;engineering-management&lt;/a&gt; Github repository where I curate a list of useful management resources.&lt;/em&gt;&lt;/p&gt;</content><category term="engineering-management"></category></entry><entry><title>10 principles for good code</title><link href="http://www.dein.fr/2015-10-01-10-principles-for-good-code.html" rel="alternate"></link><published>2015-10-01T22:31:45+02:00</published><updated>2015-10-01T22:31:45+02:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2015-10-01:/2015-10-01-10-principles-for-good-code.html</id><summary type="html">&lt;p&gt;Taking inspiration from Dieter Rams' ten principles for good design, here are the ten principles of good code.&lt;/p&gt;</summary><content type="html">&lt;p&gt;It’s always interesting to apply ideas, principles and notions from one field to another. Especially when those two fields are very different.&lt;/p&gt;
+&lt;p&gt;For instance, software and product design look very different on the surface. While the former is supposedly about pure mathematical rationality, the latter is, at least apparently, about emotions, psychology i.e. about fathoming the messiness of the human mind and the physical world.&lt;/p&gt;
+&lt;p&gt;Is that true? I don’t think so. Code is written primarily for human to read [1]. Code also usually fixes problems that are coming from the physical world, and thus inherits some of its irrationality.&lt;/p&gt;
+&lt;p&gt;So, what happens if we apply one of the most regarded designers’ principles to code? Namely, how can Dieter Rams’ &lt;a href="https://en.wikipedia.org/wiki/Dieter_Rams"&gt;ten principles for good design&lt;/a&gt; [2] enable us to write better code?&lt;/p&gt;
+&lt;p&gt;&lt;img src="http://40.media.tumblr.com/9022d63c7546866dc64aaa05b35275ae/tumblr_nhjmijf3EF1qjfk8po1_1280.jpg" width="70%" /&gt;&lt;/p&gt;
+&lt;h2&gt;Good code is innovative&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The possibilities for progression are not, by any means, exhausted.
+Technological development is always offering new opportunities for original
+designs. But imaginative design always develops in tandem with improving
+technology, and can never be an end in itself.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Some problems our code is solving are very old (e.g. moving people across a city). How can we use software, and the machine's capabilities, to better solve them? Even when we’re already using computers (e.g. to scan signed paperwork), how can we use them to go one step further (e.g. ask for an electronic signature), delivering a better experience to the end user?&lt;/p&gt;
+&lt;p&gt;Even if you have a well established product that is deemed very innovative today, you’re still at the mercy of a new competitor out-innovating you. The tech sector is full of such examples. Companies that stay successful are the ones which don’t fear to constantly disrupt themselves through technological innovation.&lt;/p&gt;
+&lt;h2&gt;Good code makes a product useful&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A product is bought to be used. It has to satisfy not only functional, but also
+psychological and aesthetic criteria. Good design emphasizes the usefulness of
+a product whilst disregarding anything that could detract from it.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Code is written to be used. As I wrote in &lt;a href="http://www.dein.fr/2013-08-16-we-should-not-ship-code.html"&gt;We should not ship code&lt;/a&gt;, we don’t code for the sake of coding. We code because that’s how a lot of problems can be solved.&lt;/p&gt;
+&lt;p&gt;Because code is an intellectual product, its usability needs to be even more an area of focus. Front-end interfaces and back-end API need to provide good affordance, i.e. their capabilities needs to be self-evident for the user.&lt;/p&gt;
+&lt;p&gt;Using the pareto principle can be useful here: the codebase should stay focused on the problem at stake, with more than 80% of its LOC being about the business problem. Otherwise, those other functionalities need to be put in libraries, or other services.&lt;/p&gt;
+&lt;h2&gt;Good code is aesthetic&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The aesthetic quality of a product is integral to its usefulness because
+products are used every day and have an effect on people and their well-being.
+Only well-executed objects can be beautiful.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Note that while this obviously applies to the web interface or the mobile app’s interface, it also applies to a back-end API.&lt;/p&gt;
+&lt;p&gt;Since code is written to be primarily read by human beings, there’s no reason it can’t take inspiration from literature. Describing how code can be made to be aesthetically pleasing would take a much longer blog post, but here’s some ideas:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Consistency of code style&lt;/li&gt;
+&lt;li&gt;Structure showing clarity of thoughts&lt;/li&gt;
+&lt;li&gt;Absence of cruft (&lt;code&gt;TODO&lt;/code&gt;, &lt;code&gt;FIXME&lt;/code&gt;, etc.)&lt;/li&gt;
+&lt;li&gt;Orthography and grammar for comments&lt;/li&gt;
+&lt;li&gt;Appropriate naming&lt;/li&gt;
+&lt;li&gt;Conciseness of code, comments, naming, function&lt;/li&gt;
+&lt;li&gt;Reusability of concepts and routines&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Good code makes a product understandable&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;It clarifies the product’s structure. Better still, it can make the product
+clearly express its function by making use of the user's intuition. At best, it
+is self-explanatory.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Code, more than anything, has a tendency to drift away from the business’ reality. This is one kind of technical debt. When the abstractions that are used in code don’t map the physical world’s reality, they need to be refactored.&lt;/p&gt;
+&lt;p&gt;One good way to identify when code is impeding a product’s understandability is to document it. If you find yourself having to give too much context about how code and reality differ, then it means code can be improved.&lt;/p&gt;
+&lt;p&gt;Documentation has a tendency to become out of date, so if you need to invest some time, it’s probably safer to invest it in refactoring the code (taking the opportunity of improving the product as well, refactoring for the sake of refactoring rarely brings enough value) to make it more self-documenting.&lt;/p&gt;
+&lt;h2&gt;Good code is unobtrusive&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Products fulfilling a purpose are like tools. They are neither decorative
+objects nor works of art. Their design should therefore be both neutral and
+restrained, to leave room for the user’s self-expression.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Code can go too far. Overusing abstraction (here’s an interesting article about how &lt;a href="http://jeremymikkola.com/posts/2015_08_28_warming_up_to_go.html"&gt;Go is an anti-abstraction language&lt;/a&gt;), using fancy data structures, overly complex libraries (for instance, using an ORM where it’s not needed), reinventing the wheel: all of those get in the way of having code that is actually maintainable.&lt;/p&gt;
+&lt;p&gt;This is another point I’ve made in &lt;a href="http://www.dein.fr/2015-02-18-maslows-pyramid-of-code-review.html"&gt;Maslow’s pyramid of code review&lt;/a&gt;. Code that is elegant for the sake of being elegant and at the expense of being correct is just getting in the way, and should be refactored or removed.&lt;/p&gt;
+&lt;h2&gt;Good code is honest&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;It does not make a product more innovative, powerful or valuable than it really
+is. It does not attempt to manipulate the consumer with promises that cannot be
+kept.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Over-engineering a solution is a very powerful temptation. Even when a company is moving really fast, and seems to be very far from over-engineering, it can still invest in the wrong area: invest in the wrong tooling too soon, build something from scratch when there are some better off-the-shelf alternatives, etc.&lt;/p&gt;
+&lt;h2&gt;Good code is lasting&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;It avoids being fashionable and therefore never appears antiquated. Unlike
+fashionable design, it lasts many years – even in today’s throwaway society.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;More than in any other domain, software development is plagued with short-lived programming libraries, frameworks, patterns. Pick solutions that are battle-tested, and be conservative in your technical choices.&lt;/p&gt;
+&lt;p&gt;Write tests so that functionality can’t be removed and changed without the future maintainer getting explicit feedback about it.&lt;/p&gt;
+&lt;h2&gt;Good code is thorough down to the last detail&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Nothing must be arbitrary or left to chance. Care and accuracy in the design
+process show respect towards the user.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Edge cases needs to be accounted for, without going into over-engineering. While it’s fine to sacrifice certain use cases when building an MVP, it’s not what makes the end product delightful. When code elegantly accounts for all edge cases (for instance, through using patterns such as &lt;a href="https://en.wikipedia.org/wiki/Strategy_pattern"&gt;strategy&lt;/a&gt;), maintenance is easy and edge cases can be fixed as they come, leading to an amazing user experience.&lt;/p&gt;
+&lt;p&gt;Also, code is not enough. There’s a lot of context around code that needs to be there:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Documentation&lt;/li&gt;
+&lt;li&gt;Monitoring (operational and business monitoring)&lt;/li&gt;
+&lt;li&gt;Alerting&lt;/li&gt;
+&lt;li&gt;Testing (unit, integration, end-to-end, capacity)&lt;/li&gt;
+&lt;li&gt;Logging and ability to be introspected and debugged&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Good code is environmentally-friendly&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Design makes an important contribution to the preservation of the environment. &amp;gt; It conserves resources and minimizes physical and visual pollution throughout
+the lifecycle of the product.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Code consumes electricity, which is finite resource. When code is made more performant, it not only has an impact on the customer, but also on the environment.&lt;/p&gt;
+&lt;p&gt;Good code also makes efficient use of data structure and algorithm, and promote reusability. Too often the same piece of functionality is copy pasted between codebases, leading to huge loss in developer efficiency. They should be put in libraries, and open sourced when possible.&lt;/p&gt;
+&lt;h2&gt;Good code is as little code as possible&lt;/h2&gt;
+&lt;p&gt;&lt;img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/606-Universal-Shelving-System.jpg" width="70%" /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Less, but better – because it concentrates on the essential aspects, and the
+products are not burdened with non-essentials.
+Back to purity, back to simplicity.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This is my preferred principle. I already talked about it in &lt;a href="http://www.dein.fr/2013-08-16-we-should-not-ship-code.html"&gt;We should not ship code&lt;/a&gt;, but the basic idea is that software engineering is not primarily about writing code. It’s about solving problems. It just so happens that a lot of problems can be solved through code - but that does not mean that code solves everything.&lt;/p&gt;
+&lt;p&gt;How do we write less code?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;By finding existing, off-the-shelf solution and avoiding the NIH (not invented here) syndrome.&lt;/li&gt;
+&lt;li&gt;By focusing on the problem at stake, escaping the YAGNI (you ain’t gonna need it) syndrome.&lt;/li&gt;
+&lt;li&gt;By spending enough time thinking about the problem, without writing code, so as to design the simplest solution possible (but not any simpler).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Why having less code is better in the long term is pretty obvious: less maintenance, (usually) more performance, less cognitive load for new developers, etc.&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Because code is as much a literary experience as it is a rational undertaking, using principles coming from product design can be useful to think and talk about code.&lt;/p&gt;
+&lt;p&gt;References:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;[1]: Harold Abelson, Structure and Interpretation of Computer Programs&lt;/li&gt;
+&lt;li&gt;[2]: Wikipedia contributors, "Dieter Rams," Wikipedia, The Free Encyclopedia, https://en.wikipedia.org/w/index.php?title=Dieter_Rams&amp;amp;oldid=682540168 (accessed October 1, 2015).&lt;/li&gt;
+&lt;li&gt;[3]: Vitsoe at en.wikipedia [CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0)], from Wikimedia Commons&lt;/li&gt;
+&lt;/ul&gt;</content><category term="code"></category></entry><entry><title>Maslow's pyramid of code review</title><link href="http://www.dein.fr/2015-02-18-maslows-pyramid-of-code-review.html" rel="alternate"></link><published>2015-02-18T04:15:00+01:00</published><updated>2015-02-18T04:15:00+01:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2015-02-18:/2015-02-18-maslows-pyramid-of-code-review.html</id><summary type="html">&lt;p&gt;Maslow's pyramid can help us think about what great code reviews look like.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="" src="https://36.media.tumblr.com/72e7200921159a4374b7fc163fe0f6f2/tumblr_njwlh7rZui1qgj0nao1_400.png"&gt;&lt;/p&gt;
+&lt;p&gt;As in Maslow's pyramid, each layer requires the previous one. It is useless for code that is charging the wrong customer to be readable.&lt;/p&gt;
+&lt;p&gt;Code should be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Correct&lt;/strong&gt;: does the code do what it's supposed to? Does it handle edge cases? Is it adequately tested to make sure that it stays correct even when other engineers modify it? Is it performant enough for this use case?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Secure&lt;/strong&gt;: does the code have vulnerabilities? Is the data stored safely? Is personal identification information (PII) handled correctly? Could the code be used to induce a DOS? Is input validation comprehensive enough?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Readable&lt;/strong&gt;: is the code easy to read and comprehend? Does it make clear what the business requirements are (code is written to be read by a human, not by a computer)? Are tests concise enough? Are variables, functions and classes named appropriately? Do the domain models cleanly map the real world to reduce cognitive load? Does it use consistent coding convention?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Elegant&lt;/strong&gt;: does the code leverage well-known patterns? Does it achieve what it needs to do without sacrificing simplicity and conciseness? Would you be excited to work in this code? Would you be proud of this code?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Altruist&lt;/strong&gt;: does the code leave the codebase better than what it was? Does it inspire other engineers to improve their code as well? Is it cleaning up unused code, improving documentation, introducing better patterns through small-scale refactoring?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Update Feb 18th&lt;/em&gt;: there's some great comments on &lt;a href="https://www.reddit.com/r/programming/comments/2wau2x/maslows_pyramid_of_code_review/"&gt;reddit&lt;/a&gt; about this. I removed the notion of large refactor because I think small refactors have a higher probability of success. I also added a comment about why layering matters.&lt;/p&gt;</content><category term="code"></category></entry><entry><title>Engineering managers’ priorities in a hyper-growth startup</title><link href="http://www.dein.fr/2014-03-02-engineering-managers-priorities-in-a-hyper-growth.html" rel="alternate"></link><published>2014-03-02T06:59:00+01:00</published><updated>2014-03-02T06:59:00+01:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2014-03-02:/2014-03-02-engineering-managers-priorities-in-a-hyper-growth.html</id><summary type="html">&lt;p&gt;Grow the team. Maintain a vision. Manage projects. Organize. Code.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img src='http://media.tumblr.com/7d28e3f33fc6bf64d884be3818f02b53/tumblr_inline_n0tj743HjE1qfkyvc.jpg' /&gt;&lt;/p&gt;
+&lt;p&gt;This is my take on an engineering manager’s priorities at a hyper-growth startup. I quite often forget about them – it turns out a task’s engagingness not always correlates with its importance… Having such a framework does help making tradeoff.&lt;/p&gt;
+&lt;h2&gt;1. Growing the team&lt;/h2&gt;
+&lt;p&gt;The first and foremost priority should be to grow the team. The problem with shipping features fast is that it’s a vicious circle: the faster you ship, the slower you get because you have to maintain existing product and features. You can only hire your way out, growing the team by hiring. This way you can (1) take on more projects (2) better balance the maintenance duties across the team.&lt;/p&gt;
+&lt;p&gt;It also involves making sure current team member grow in their career and skills. For people who love teaching and mentoring, being in this position is a blessing… For example, in my biweekly one-and-one, I try to avoid talking about current projects and prefer to focus about the mentoring part, because I feel like this is where I can deliver more value to engineers and the company. Our team also has weekly brown bags where somebody teaches us about a specific topic (concurrency in UNIX-like OSes, CPython datastructures, profiling Python code, etc.). It provides a great place for charging our mental batteries: people love to teach and to learn! As an engineering manager, your role is just to provide the environment for this to take place.&lt;/p&gt;
+&lt;h2&gt;2. Maintaining a vision&lt;/h2&gt;
+&lt;p&gt;I’ve always been convinced that a good product is made of 1% inspiration and 99% perspiration, to paraphrase Thomas Edison. That being said, as an engineering manager you have to take the time to think about the vision. Making sure it is shared within the team and trusting your engineers to make sound decisions is much more efficient and powerful than micromanaging.&lt;/p&gt;
+&lt;p&gt;I particularly like two books’ take on this topic: Guy Kawasaki’s &lt;a href="http://www.amazon.com/Reality-Check-Outsmarting-Outmanaging-Outmarketing/dp/1591843944"&gt;Reality Check&lt;/a&gt; and Patrick M. Lencioni’s &lt;a href="http://www.amazon.com/Advantage-Organizational-Everything-Business-Lencioni-ebook/dp/B006ORWT3Y/ref=sr_1_1?s=books&amp;amp;ie=UTF8&amp;amp;qid=1391988464&amp;amp;sr=1-1&amp;amp;keywords=the+advantage+why+organizational+health+trumps+everything+else+in+business"&gt;The Advantage: Why Organizational Health Trumps Everything Else In Business&lt;/a&gt;. The strategy is basically (1) to make it as clear as possible (2) to overcommunicate it (pedagogy through repetition). Maintaining the vision (with the help of product managers) helps make sure engineering time is fully leveraged to achieve something big.&lt;/p&gt;
+&lt;p&gt;Engineering managers also need to spend time aligning their team’s vision with company priorities that can be changing pretty rapidly.&lt;/p&gt;
+&lt;h2&gt;3. Managing projects&lt;/h2&gt;
+&lt;p&gt;Things move very fast in a hyper-growth company, leaving a lot of room for miscommunication and wasted energy. A project manager’s role is basically to keep the ball rolling, spending their time unblocking people by maintaining a constant flow of communication. This is vital for complex, cross-functional projects where interdependencies need to be carefully thought of so that there’s no duplicated effort.&lt;/p&gt;
+&lt;p&gt;Because engineering managers keep track of current projects and interact with other teams, they are uniquely positioned to provide this context to existing projects, discovering and leveraging synergies.&lt;/p&gt;
+&lt;h2&gt;4. Organizing&lt;/h2&gt;
+&lt;p&gt;The basic premise behind the engineering manager role is that having a hierarchical organization is more efficient than having a free-for-all anarchy. I think they should also be thinking about the team’s internal organization. Should you create subteams to support the business’ needs? Should you experiment with new roles to make the team more efficient?&lt;/p&gt;
+&lt;p&gt;This is even more the case with hyper-growth startups, where the uninterrupted flow of feature requests and bug reports can be quite disruptive. We experimented with having a rolling support engineer who would be fixing the bugs so that other people can focus on their project. This way people get regularly exposed to the overall codebase – something that can hopefully inform their project’s implementation details as well.&lt;/p&gt;
+&lt;h2&gt;5. Coding&lt;/h2&gt;
+&lt;p&gt;As I said in my previous article &lt;a href="http://www.dein.fr/2014-01-29-learnings-from-six-months-as-a-first-time.html"&gt;Learnings from six months as a first-time engineering manager&lt;/a&gt;, I think that managers should keep on coding. This is the best way to lead by example. For instance, if you have troubles convincing other engineers that writing tests is valuable, then make sure to write some when working on a fix, showing why and how that made your more efficient.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Picture from Paul Falardeau&lt;/em&gt;&lt;/p&gt;</content><category term="engineering-management"></category></entry><entry><title>Learnings from six months as a first-time engineering manager</title><link href="http://www.dein.fr/2014-01-29-learnings-from-six-months-as-a-first-time.html" rel="alternate"></link><published>2014-01-29T06:54:00+01:00</published><updated>2014-01-29T06:54:00+01:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2014-01-29:/2014-01-29-learnings-from-six-months-as-a-first-time.html</id><summary type="html">&lt;p&gt;It's demanding. Empathy is required. You should keep coding. It's easy to make a difference. You can and should disconnect. You will grow through mentoring and feedback. It's incredibly rewarding.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="" src="https://31.media.tumblr.com/c30edf43dc36a7120da097f4da8ac3b7/tumblr_inline_n05f0wEljq1qfkyvc.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Update (Feb 2017): I am keeping a list of resources for engineering managers on Github: &lt;a href="https://github.com/charlax/engineering-management"&gt;engineering-management&lt;/a&gt;. I have also changed my mind about some of the points below, but certainly not the last two ones: management is an amazing responsibility, and it requires constant learning.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2&gt;It’s demanding&lt;/h2&gt;
+&lt;p&gt;“Humans are much more complicated than machines”: one never experiences this saying more than when moving from a technical contributor role to a manager one. While debugging can be an exasperating task, discouragement is a feeling all managers need to learn to control, both in their team and in themselves.&lt;/p&gt;
+&lt;p&gt;Interrupt becomes the norm. You will become a marketplace for priorities. As in any marketplace, the immediate cost is often evident, but the long-term value is never obvious. That’s why all managers should take some time to reassess all of their current priorities and see if they’re not missing one. For instance, it’s very easy to forget about managers’ priority number one (hiring) when dealing with a complex project.&lt;/p&gt;
+&lt;p&gt;As regard transitioning from a world where you are praised for the code you ship to a world where you are a multiplier of other’s work, it won’t happen in one month. It takes some time to find the good balance between under- and over-managing. I don’t think I found it yet. One way I balance contributing with multiplying is through taking small coding tasks that nobody has time to do, letting team members do the big and complex projects. This way I’m sure I won’t interfere too much.&lt;/p&gt;
+&lt;h2&gt;Empathy is required&lt;/h2&gt;
+&lt;p&gt;Empathy is the most important social virtue. French writer Montaigne showed a great deal of it throughout his masterwork Les Essais, for instance when describing cannibals. Similarly, managers should be always thinking about their team’s feeling, listening to their instincts. Do you feel that this person is not happy with her project? Do you think that those two engineers don’t get along well? You need to take action. “As the prayer of St. Francis goes, we must seek to understand more than to be understood [1]”. It’s not anymore about you - it’s about the team.&lt;/p&gt;
+&lt;p&gt;You also need to be constantly thinking about the consequences of everything you do. One thing that I learned the hard way is that anything that has the potential to be misinterpreted will be. For instance, when dealing with a project that is late, you might unwillingly make remarks that will be deemed disrespectful.&lt;/p&gt;
+&lt;p&gt;People often talk about “trust but verify”. My management framework is more along the lines of “be helpful”. You need to become an helpful resource to your team members. For instance, if you do quality code reviews, engineers will know you will help them improve their code and spot bugs. If you do good architectural reviews, engineers will know you will help them succeed. If you provide candid feedback professionally, people will know that you take on this difficult task to help them blossom.&lt;/p&gt;
+&lt;h2&gt;You should keep coding&lt;/h2&gt;
+&lt;p&gt;Should managers code? Programming requires long period of uninterrupted time. It is almost totally at odds with a manager’s role which is to be the person who will be interrupted so that team members aren’t. I once took a coding project to reduce the load on my team. The effect was immediate and lasting, with decreased morale and wrong product directions.&lt;/p&gt;
+&lt;p&gt;That being said, not doing any coding is too risky for a manager. Front-line managers will lose empathy for the difficulty of engineers’ job if they stop coding. If managers are supposed to lead by example, then coding is also a good opportunity to assert some of the principles you believe in (writing tests and documentation, having a clean API, open sourcing software…). If you aren’t coding, you won’t be as resourceful when helping new team members navigate through the code. You risk also losing a good understanding of the technology you’re using.&lt;/p&gt;
+&lt;h2&gt;It’s easy to make a difference&lt;/h2&gt;
+&lt;p&gt;Some of those action items are common sense - but as Voltaire puts it, “common sense is quite rare”:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Acknowledge your mistakes often, clearly and early.&lt;/li&gt;
+&lt;li&gt;Listen twice as much as you talk.&lt;/li&gt;
+&lt;li&gt;Strive for your engineer’s success, not for yours. Yours will come as a consequence of theirs.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;One simple thing that very few managers do is to ask what people would like to work on. It’s very easy for a manager to become a task dispatcher. Whenever you have the opportunity to do so, try to get a better understanding of what your engineer like to work on: front-end/back-end, clear/unclear requirements, user-facing/developer facing, Python/JavaScript… Brainstorm ideas instead of trying to impose your own, because your idea might not be the best, and people need to have some buy-in. Their happiness and the quality of their work will increase.&lt;/p&gt;
+&lt;p&gt;There’s a poster at Facebook that says “do things and tell others”. If your team ship awesome features but nobody knows, what’s the point? More than anyone else (especially for engineers who might think it’s a chore), you need to communicate with the rest of the company. This is also a good opportunity to find synergies with other teams. You’ll also stay on top of what your team is doing. Engineers on your team will feel rewarded and recognized for their work.&lt;/p&gt;
+&lt;h2&gt;The virtue of disconnecting&lt;/h2&gt;
+&lt;p&gt;Lean startup, agile, MVP, etc.: current development practices seem to recommend focusing on the act of implementing, at the expense of preparation. It is probably true that when solving problems through code, the emphasis should be put on the implementation. Things are moving so fast that most technologies are new for everyone, and only through shipping features will you be able to get a better sense of the problem.&lt;/p&gt;
+&lt;p&gt;Not so much with management: there is a lot of value in weighing pros and cons, listening to everyone (especially in interpersonal conflicts), taking some disconnected time to research and quietly think about the problem. It’s especially useful to seek mentoring when contemplating difficult decisions.&lt;/p&gt;
+&lt;h2&gt;You will grow through mentoring&lt;/h2&gt;
+&lt;p&gt;There are numerous resources on the web to improve your programming skills. There’s also a wealth of resources about management, though it’s less structured. The Software Lead Weekly has been very helpful to me - I’ve never seen such a good curation of content.&lt;/p&gt;
+&lt;p&gt;There is something fundamentally different with improving your managerial skills. While you improve your code through your peers, as a manager you very rarely expect other managers to give you feedback. Similarly, your team member might (and should) give you feedback, but they might not be able to give you the best way to improve. Therefore, the best source of mentorship is probably your own manager.&lt;/p&gt;
+&lt;p&gt;You need to have senior management really believe in management as a craft. Having managers who really care about their work, think highly of it and always strive to improve themselves is key. There is a multiplying effect: people who really care about their work infect others to do the same, creating a virtuous circle inside the company.&lt;/p&gt;
+&lt;h2&gt;It’s incredibly rewarding&lt;/h2&gt;
+&lt;p&gt;An engineer works closely with 2-3 persons. You have the awesome opportunity of working with your whole team (around 7 awesome engineers), other engineer managers, product managers, designers, etc. Your impact will also be much larger. There’s a high chance nobody will remember the feature you built in 20 years. But people do remember their managers, especially those who mentored them at the start of their career.&lt;/p&gt;
+&lt;p&gt;I would like to conclude with the following: there are numerous common points between parenting and managing. The main one is the following: everyone has an opinion about it. You need to seek mentoring, but you also need to find your management style. Especially when under pressure, it may seem simpler to embrace a style that is not yours (e.g. micromanaging). Resist the temptation, because it will backfire (it did for me). Your management style depends a lot on your own character - which you can always improve, but you can’t fake it. Through self-improving by experimenting and learning, you will blossom in this awesome role.&lt;/p&gt;
+&lt;p&gt;[1] Lencioni, Patrick M. (2012-03-14). The Advantage: Why Organizational Health Trumps Everything Else In Business (J-B Lencioni Series) (p. 33). Wiley. Kindle Edition.&lt;/p&gt;
+&lt;p&gt;Picture by &lt;a href="http://www.flickr.com/photos/augustgregg/"&gt;August Gregg&lt;/a&gt;&lt;/p&gt;</content><category term="engineering-management"></category></entry><entry><title>Code as Craft</title><link href="http://www.dein.fr/2013-09-19-code-as-craft.html" rel="alternate"></link><published>2013-09-19T17:00:42+02:00</published><updated>2013-09-19T17:00:42+02:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2013-09-19:/2013-09-19-code-as-craft.html</id><summary type="html">&lt;p&gt;Let's take pride in our software engineering craft.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;img alt="" src="http://media.tumblr.com/9bd7756fa039446f15371bb8ff7fb37c/tumblr_inline_mtcwjbBIDb1qfkyvc.jpg"&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;To win a race, the swiftness of a dart&lt;/span&gt;
+&lt;span class="err"&gt;Availeth not without a timely start.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;a href="http://en.wikisource.org/wiki/The_Hare_and_the_Tortoise_(de_La_Fontaine)"&gt;The Hare and the Tortoise&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Etsy's engineering blog "&lt;a href="http://codeascraft.com/about/"&gt;Code as Craft&lt;/a&gt;" can
+easily be considered one of the best ones in the industry.&lt;/p&gt;
+&lt;p&gt;In their definition of "craftsmanship", they make this long quote from &lt;a href="http://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X"&gt;The Pragmatic
+Programmer&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;The construction of software should be an engineering discipline. However,&lt;/span&gt;
+&lt;span class="err"&gt;this doesn’t preclude individual craftsmanship. Think about the large&lt;/span&gt;
+&lt;span class="err"&gt;cathedrals built in Europe during the Middle Ages. Each took thousands of&lt;/span&gt;
+&lt;span class="err"&gt;person-years of effort, spread over many decades. Lessons learned were&lt;/span&gt;
+&lt;span class="err"&gt;passed down to the next set of builders, who advanced the state of&lt;/span&gt;
+&lt;span class="err"&gt;structural engineering with their accomplishments. But the carpenters,&lt;/span&gt;
+&lt;span class="err"&gt;stonecutters, carvers, and glass workers were all craftspeople,&lt;/span&gt;
+&lt;span class="err"&gt;interpreting the engineering requirements to produce a whole that&lt;/span&gt;
+&lt;span class="err"&gt;transcended the purely mechanical side of the construction. It was their&lt;/span&gt;
+&lt;span class="err"&gt;belief in their individual contributions that sustained the projects: We&lt;/span&gt;
+&lt;span class="err"&gt;who cut mere stones must always be envisioning cathedrals. (Quarry worker’s&lt;/span&gt;
+&lt;span class="err"&gt;creed).&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;There are two parts about craftsmanship: one that is intrinsic, and one that is
+extrinsic.&lt;/p&gt;
+&lt;p&gt;The extrinsic part is perhaps the most obvious one: craftspeople &lt;strong&gt;think
+holistically&lt;/strong&gt; about what they're building. In some sense, what they aim to
+accomplish is much bigger than their work. A great woodworker experiences
+empathy about her customer and aspires to build something that will delight the
+end-user. They not only support a use case, but go much further and let the
+produced artifact transcends it. Well-crafted code not only fixes
+a problem, it fixes it elegantly. It does not show any rough patch and
+feels a natural solution. The consequence of that is when a problem is not
+well-defined, or when the timeline set to fix it is not feasible, engineers
+should push back - or at least openly share their concerns, just like a good woodworker would
+do. Nobody would ever ask a woodworker to take shortcuts when he's building
+the house's framework.&lt;/p&gt;
+&lt;p&gt;The intrinsic part is about &lt;strong&gt;taking pride in one's work and reflecting about
+it&lt;/strong&gt;.  It's about sharpening one's tools and adding new ones. A great
+woodworker would talk for hours about his tools. It's highly probable that his
+workshop will be tidy, following the 5S methodology (more about that below).
+There's no reason software engineers should feel differently. On the contrary,
+they should always be learning, and a great way to learn is to strive for code
+quality. When you optimize for speed, you usually don't take time to learn
+about your tools and end up misusing them. In the long term, this strategy will
+ultimately backfire.&lt;/p&gt;
+&lt;p&gt;Engineers who take the time to learn about tools, who take time to write
+testable &amp;amp; quality code, who take time to carefully think about the
+architecture of a service or of an implementation (e.g. following design
+patterns) will perhaps be a bit slower in the short term, but this will pay out
+ten times in the long term (in quality but also in speed). Striving for quality
+in every project, in every task, even mundane (e.g. by automating a test that
+could totally be done manually) will enable you to reach the same amount of
+quality much faster. Always caring about quality enables continuous
+improvement: it might take one hour to learn about how to properly use
+a complex but powerful feature of a Python library, but the next time you'll
+have 1- probably a much more reliable and fast solution 2- trained your brain
+to be constantly learning.  Our industry is moving so fast that this is in my
+opinion the only durable strategy.&lt;/p&gt;
+&lt;p&gt;Craftsmanship is ultimately about the worker as a person. Craftspeople are
+those who learn and have fun doing it!&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="http://media.tumblr.com/e9919eb6a23489be91c11635608d3763/tumblr_inline_mtcwn0g54e1qfkyvc.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Here are the &lt;a href="http://en.wikipedia.org/wiki/5S_(methodology)"&gt;5S&lt;/a&gt; (seiri,
+seiton, seiso, seiketsu, and shitsuke) applied to software engineering:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Sorting: remove code that is never run.&lt;/li&gt;
+&lt;li&gt;Set in order: streamline deployment and management through scripts and
+  automation.&lt;/li&gt;
+&lt;li&gt;Systematic cleaning: remove all TODOs, FIXMEs and temporary code.&lt;/li&gt;
+&lt;li&gt;Standardising: remove hacks by improving patterns, abstractions and
+  architecture.&lt;/li&gt;
+&lt;li&gt;Sustaining: use continuous integration tools to prevent backsliding.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;(there's a similar take about 5S applied to software development in &lt;a href="http://blogs.versionone.com/agile_management/2013/07/25/5s-applied-to-agile-software-development/"&gt;this
+article&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Pictures from RaidersLight (CC BY-NC-SA) and Alan Cleaver (CC BY)&lt;/p&gt;</content><category term="code"></category></entry><entry><title>Resources to learn coding</title><link href="http://www.dein.fr/2013-09-09-resources-to-learn-coding.html" rel="alternate"></link><published>2013-09-09T17:53:52+02:00</published><updated>2013-09-09T17:53:52+02:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2013-09-09:/2013-09-09-resources-to-learn-coding.html</id><summary type="html">&lt;p&gt;A list of resources to learn programming.&lt;/p&gt;</summary><content type="html">&lt;p&gt;I'm often asked about resources to learn programming. Here are a few of them.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/charlax/professional-programming"&gt;charlax/professional-programming&lt;/a&gt;: a collection of full-stack resources for programmers&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.coursera.org/"&gt;Coursera&lt;/a&gt; (the best IMO)&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.udacity.com/"&gt;Udacity&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.udemy.com/"&gt;Udemy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.khanacademy.org/"&gt;Khan Academy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://learnpythonthehardway.org/"&gt;Learn Python the Hard Way&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.codecademy.com/"&gt;CodeAcademy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.apple.com/education/itunes-u/"&gt;iTunesU&lt;/a&gt; has some good courses.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There are numerous of them, and this does not even count the books. There are also numerous articles about the best resources to learn coding, and the best method of learning.&lt;/p&gt;
+&lt;p&gt;Here's my only advice: &lt;strong&gt;nothing beats learning by doing&lt;/strong&gt;. Try to build something meaningful and exciting to apply what you learn.&lt;/p&gt;</content><category term="code"></category></entry><entry><title>We should not ship code</title><link href="http://www.dein.fr/2013-08-16-we-should-not-ship-code.html" rel="alternate"></link><published>2013-08-16T20:02:00+02:00</published><updated>2013-08-16T20:02:00+02:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2013-08-16:/2013-08-16-we-should-not-ship-code.html</id><summary type="html">&lt;p&gt;An engineer's job is not to write code - it is to solve business problems.&lt;/p&gt;</summary><content type="html">&lt;p&gt;It easy to be mistaken into thinking that a software developer's job is to ship code.&lt;/p&gt;
+&lt;p&gt;It is not.&lt;/p&gt;
+&lt;p&gt;Our job is to solve intellectual problems.&lt;/p&gt;
+&lt;p&gt;It so happens that out of all the tools humans created, computers are best at solving those, because software is great at dealing with abstractions. However, we will never get recognition from the business if we just ship code. We get recognition if we solve problems and if we do it fast.&lt;/p&gt;
+&lt;p&gt;That is why the best companies focus on problem-solving in their interviews, and not on fundamental knowledge. A quick learner can learn whatever she wants to solve things. We are in the learning business. We are always learning new programming languages, databases, libraries, services, patterns... to be faster at solving problems. We also need to learn about the problems itself, and that is why waterfall is rarely a good thing: how can developers fix business problems if they cannot build their understanding of it?&lt;/p&gt;
+&lt;p&gt;Yesterday, during our show &amp;amp; tell session one developer demonstrated a remarkable tool that would fix one of our long-standing problems. This tool requires minimal integration. A problem was solved without code.&lt;/p&gt;
+&lt;p&gt;We are in the business of solving intellectual problems. The business is never going to measure our ROI with the number of lines of code we write. The only thing it is concerned with is whether or not the problem was solved efficiently.&lt;/p&gt;
+&lt;p&gt;It does not mean that everything has to be simple, nor this is a good excuse for fast and loose solutions (ultimately those will make the code less maintainable, and it will be very costly to solve new problems, as requirements tend to grow over time). We should take pride in elegantly solving complex problems. Some complex problems might require a complex solution. That is fine. Just like woodworkers prides themselves in their mastery of their tools, we should be proud of how much we master our tools. However, our skills are not the end goal. The solution is.&lt;/p&gt;</content><category term="code"></category></entry><entry><title>Using qcachegrind to visualize Python profiling data</title><link href="http://www.dein.fr/2013-05-22-using-qcachegrind-to-visualize-python-profiling.html" rel="alternate"></link><published>2013-05-22T00:46:00+02:00</published><updated>2013-05-22T00:46:00+02:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2013-05-22:/2013-05-22-using-qcachegrind-to-visualize-python-profiling.html</id><summary type="html">&lt;p&gt;How to visualize your code's profile with qcachegrind.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Dependencies&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;graphviz&lt;/code&gt; is required for the call graph.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ brew install qcachegrind graphviz
+$ pip install pyprof2calltree
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Profiling&lt;/h2&gt;
+&lt;p&gt;Profile your code with &lt;code&gt;cProfile&lt;/code&gt; or &lt;code&gt;Profile&lt;/code&gt;. &lt;code&gt;pyprof2calltree&lt;/code&gt; won't work with &lt;code&gt;hotshot&lt;/code&gt;. Store the profile data in a &lt;code&gt;.pstats&lt;/code&gt; file.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ python -m cProfile -o profile.pstats yourscript.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then run:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ pyprof2calltree -i profile.pstats -o profile.kgrind
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then open this &lt;code&gt;kgrind&lt;/code&gt; file with &lt;code&gt;qcachegrind&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ qcachegrind profile.kgrind
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;img alt="" src="http://media.tumblr.com/8faf28c1b1d9227330b4f185c48982cd/tumblr_inline_mspsujDXvH1qz4rgp.png"&gt;&lt;/p&gt;</content><category term="code"></category></entry><entry><title>Why I keep on using Vim instead of going back to TextMate</title><link href="http://www.dein.fr/why-I-keep-on-using-vim.html" rel="alternate"></link><published>2011-12-14T10:53:00+01:00</published><updated>2011-12-14T10:53:00+01:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2011-12-14:/why-I-keep-on-using-vim.html</id><summary type="html">&lt;p&gt;Why taking the time to learn Vim is a smart investment.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Disclaimer: this article only conveys my personal point of view. Please excuse my English!&lt;/p&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;I tried numerous text editors: Komodo, Emacs, Nano, Textwrangler, gedit, SPE, &lt;a href="http://www.sublimetext.com/"&gt;Sublime&lt;/a&gt;, Coda, &lt;a href="http://www.vicoapp.com/"&gt;Vico&lt;/a&gt;...&lt;/p&gt;
+&lt;p&gt;When I discovered TextMate, I really loved it because it was both flexible and
+Mac-friendly. Even today, I think that it's a great tool that can greatly
+improve productivity.&lt;/p&gt;
+&lt;p&gt;Yesterday, MacroMates &lt;a href="http://blog.macromates.com/2011/textmate-2-0-alpha/"&gt;released&lt;/a&gt; the first public
+Textmate 2.0 alpha version. Its authors acknowledged the long wait that preceded
+this release by stating that it would "provide some relief to those who have been questioning TextMate’s future".&lt;/p&gt;
+&lt;p&gt;I began using Vim two weeks ago, and right now I don't see any reason
+why I would get back to TextMate. I'll try to explain in details how I got
+to use Vim and what are its (numerous) advantages.&lt;/p&gt;
+&lt;h2&gt;Vim: &lt;a href="http://en.wikipedia.org/wiki/Je_t'aime..._moi_non_plus"&gt;Je t'aime moi non plus&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Maybe some other hackers will recognize themselves in this
+behavior: even though I've been using Vim for a long time, &lt;strong&gt;I never
+took the time to really learn it&lt;/strong&gt;. I used to think that Vim was too old to be
+interesting: the modal behavior looked really old-fashioned and
+counter-intuitive, to say the least.&lt;/p&gt;
+&lt;p&gt;What's paradoxical is that I kept on using Vim, primarily because it's on all
+computers and it's really efficient when modifying system files. Even when
+I tried Emacs, I kept on using Vim because it felt so much faster!&lt;/p&gt;
+&lt;p&gt;With the benefit of hindsight, it was really strange because for all the other
+tools I was always trying to improve my productivity (learning keyboard
+shortcuts, tuning configuration files, looking for ways to avoid repetition)
+but I never took the time to really learn Vim: for instance, two weeks ago
+I learned that entering &lt;code&gt;a&lt;/code&gt; in normal mode would go into insert mode &lt;em&gt;after&lt;/em&gt;
+the cursor…&lt;/p&gt;
+&lt;p&gt;Why did I suddenly became aware of this paradox?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;I read numerous articles about Vim on Hacker News (I guess it's &lt;strong&gt;useful
+  procrastination&lt;/strong&gt;).&lt;/li&gt;
+&lt;li&gt;TextMate was missing key features like split windows.&lt;/li&gt;
+&lt;li&gt;I felt that Vim offered so much flexibility and modularity that it
+  would be great to test it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Vim's numerous advantages&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Vim is free and open source.&lt;/strong&gt; Well-known open source projects are
+superior in the long term because they are not dependent on a company's
+objectives.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Vim is superior for text manipulation.&lt;/strong&gt; Most of our
+work in an editor consists in text manipulation. Contrary to Emacs'
+painful shortcuts (from my point of view), Vim's modal mode provides an
+&lt;em&gt;elegant&lt;/em&gt; and efficient interface. What is more, most of the shortcuts are
+easily memorable. TextMate does not provide such a great combination of
+ease of use and effectiveness.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Vim is empowering.&lt;/strong&gt; As Bram Moolenaar (Vim's main author) &lt;a href="http://www.moolenaar.net/habits.html"&gt;puts
+it&lt;/a&gt;, "if you spend a lot of time
+typing plain text, writing programs or HTML, you can save much of that
+time by using a good editor and using it effectively." Vim is great
+because it really puts you in charge. The learning curve is quite steep
+but it's what's exciting!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Vim has a vibrant community.&lt;/strong&gt; I agree that it's also the case for
+Emacs and Textmate. For those who still thinks Vim is old, have a look
+at all those repositories on Github!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Vim's scripting language is straightfoward.&lt;/strong&gt; Again, this is really
+personal, but I find Lisp not very well adapted to scripting. I really
+like Vim's streamlined scripting and configuration files. And you can
+also use Python or Ruby.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Vim's vision is compelling.&lt;/strong&gt; As Jeff Bezos says, "maintain a firm grasp of
+the obvious at all times." To me it is common sense that a text editor should
+focus on efficiency and text manipulation, as Brian Moolenaar puts it:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;It has always been the spirit of Unix to have separate programs that
+do their job well, and work together to perform a bigger task.
+Unfortunately, most editors don't work too well together with other
+programs - you can't replace the e-mail editor in Netscape with
+another one, for example. You end up using a crippled editor. Another
+tendency is to include all kinds of functionality inside the editor;
+Emacs is a good example of where this can end up. (Some call it an
+operating system that can also be used to edit text.)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Vim follows the Unix philosophy, which makes it extremely easy to use it
+with other programs. It is not the case for Textmate.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;An editor's configuration files should be put under version control.&lt;/strong&gt;
+A text editor is arguably the single most important tool for
+a developer. This is why it should be possible to constantly improve one's
+productivity. TextMate configuration files are not as easy to tweak.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Vim is everywhere.&lt;/strong&gt; Vim is great for sysadmin because it's present on
+most computers.&lt;/p&gt;
+&lt;h1&gt;Stuff I don't like in Vim&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;We are in 2012, the user should not have to download syntax files and
+  activate them. It should be the default.&lt;/li&gt;
+&lt;li&gt;It should use Perl's regex syntax by default.&lt;/li&gt;
+&lt;li&gt;Help files are quite difficult to read at first sight. They could be
+  improved.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;More generally, defaults could be improved. For instance, plugins management
+could be more automated, instead of having to install Pathogen and using &lt;code&gt;git
+submodules&lt;/code&gt;. This could happen outside Vim, with a kind of universal repository
+for plugins and a text file that would list all the plugins (like
+&lt;code&gt;.gitmodules&lt;/code&gt;). Plugin would be automatically updated regularly.&lt;/p&gt;
+&lt;p&gt;Here is another idea to have great defaults: why analyzing all the &lt;code&gt;vimrc&lt;/code&gt; that
+have been posted on the web? This methodology has its flaws, but we would get
+a sense of what are the best defaults.&lt;/p&gt;
+&lt;h1&gt;How to try Vim&lt;/h1&gt;
+&lt;p&gt;If you want to try Vim, just follow these two steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Do &lt;strong&gt;not&lt;/strong&gt; use any plugin or anyone else's vimrc. &lt;a href="http://mislav.uniqpath.com/2011/12/vim-revisited/"&gt;Really&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Use &lt;code&gt;vimtutor&lt;/code&gt; to learn the basics.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1&gt;Other articles&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/charlax/dotvim"&gt;Checkout my vim configuration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.moolenaar.net/habits.html"&gt;Seven habits of effective text editing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://yehudakatz.com/2010/07/29/everyone-who-tried-to-convince-me-to-use-vim-was-wrong/"&gt;Everyone Who Tried to Convince Me to use Vim was Wrong&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://mislav.uniqpath.com/2011/12/vim-revisited/"&gt;Vim: revisited&lt;/a&gt;:
+  a must-read.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://vimcasts.org/"&gt;Vimcasts&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="" src="http://media.tumblr.com/tumblr_lw7fsqf9ge1qfkyvc.png"&gt;&lt;/p&gt;</content><category term="code"></category></entry><entry><title>Articles from Joel Spolsky about functional specifications</title><link href="http://www.dein.fr/articles-from-joel-spolsky-about-functional-specifications.html" rel="alternate"></link><published>2011-11-09T09:55:00+01:00</published><updated>2011-11-09T09:55:00+01:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2011-11-09:/articles-from-joel-spolsky-about-functional-specifications.html</id><summary type="html">&lt;p&gt;Some quotable quotes about functional specs.&lt;/p&gt;</summary><content type="html">&lt;p&gt;These articles were written in 2000, but are still relevant today:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.joelonsoftware.com/articles/fog0000000036.html"&gt;Painless Functional Specifications - Part 1: Why Bother?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.joelonsoftware.com/articles/fog0000000035.html"&gt;Painless Functional Specifications - Part 2: What's a Spec?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.joelonsoftware.com/articles/fog0000000034.html"&gt;Painless Functional Specifications - Part 3: But... How?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.joelonsoftware.com/articles/fog0000000033.html"&gt;Painless Functional Specifications - Part 4: Tips&lt;/a&gt; (if you have time for only one article, read this one)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Key excerpts:&lt;/p&gt;
+&lt;h2&gt;Part 1&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;So that's giant reason number one to write a spec. Giant reason number two is
+to save time communicating. When you write a spec, you only have to
+communicate how the program is supposed to work once. Everybody on the team
+can just read the spec. The QA people read it so that they know how the
+program is supposed to work and they know what to test for. The marketing
+people use it to write their vague vaporware white papers to throw up on the
+web site about products that haven't been created yet. The business
+development people misread it to spin weird fantasies about how the product
+will cure baldness and warts and stuff, but it gets investors, so that's OK.
+The developers read it so that they know what code to write. The customers
+read it to make sure the developers are building a product that they would
+want to pay for. The technical writers read it and write a nice manual (that
+gets lost or thrown away, but that's a different story). The managers read it
+so that they can look like they know what's going on in management meetings.
+And so on.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Part 2&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When you're building a product with a team, everybody tends to have their
+favorite, real or imagined pet features that they just can't live without. If
+you do them all, it will take infinite time and cost too much money. You have
+to start culling features right away, and the best way to do this is with a
+"nongoals" section of the spec. Things we are just not going to do. A nongoal
+might be a feature you won't have ("no telepathic user interface!") or it
+might be something more general ("We don't care about performance in this
+release. The product can be slow, as long as it works. If we have time in
+version 2, we'll optimize the slow bits.") These nongoals are likely to cause
+some debate, but it's important to get it out in the open as soon as possible.
+"Not gonna do it!" as George Sr. puts it.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Part 3&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Program managers are invaluable. If you've ever complained about how
+programmers are more concerned with technical elegance than with
+marketability, you need a program manager. If you've ever complained
+about how people who can write good code never do a good job of writing
+good English, you need a program manager. If you've ever complained about
+how your product seems to drift without any clear direction, you need a
+program manager.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Part 4&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;So. Specs are good, but not if nobody reads them. As a spec-writer, you
+have to trick people into reading your stuff, and you should also probably
+make an effort not to cause any already-too-small brains to leak out
+through eye-sockets.&lt;/p&gt;
+&lt;/blockquote&gt;</content><category term="code"></category></entry></feed>

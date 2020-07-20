@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Articles from Joel Spolsky about functional specifications | dein.fr
+</title>
+  <link rel="canonical" href="./articles-from-joel-spolsky-about-functional-specifications.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="./theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="./theme/css/style.css">
+
+
+<meta name="description" content="Some quotable quotes about functional specs.">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="./">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="./pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Articles from Joel Spolsky about functional specifications
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2011-11-09T09:55:00+01:00">
+        <i class="fa fa-clock-o"></i>
+        Wed 09 November 2011
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="./category/code.html">code</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p>These articles were written in 2000, but are still relevant today:</p>
+<ul>
+<li><a href="http://www.joelonsoftware.com/articles/fog0000000036.html">Painless Functional Specifications - Part 1: Why Bother?</a></li>
+<li><a href="http://www.joelonsoftware.com/articles/fog0000000035.html">Painless Functional Specifications - Part 2: What's a Spec?</a></li>
+<li><a href="http://www.joelonsoftware.com/articles/fog0000000034.html">Painless Functional Specifications - Part 3: But... How?</a></li>
+<li><a href="http://www.joelonsoftware.com/articles/fog0000000033.html">Painless Functional Specifications - Part 4: Tips</a> (if you have time for only one article, read this one)</li>
+</ul>
+<p>Key excerpts:</p>
+<h2>Part 1</h2>
+<blockquote>
+<p>So that's giant reason number one to write a spec. Giant reason number two is
+to save time communicating. When you write a spec, you only have to
+communicate how the program is supposed to work once. Everybody on the team
+can just read the spec. The QA people read it so that they know how the
+program is supposed to work and they know what to test for. The marketing
+people use it to write their vague vaporware white papers to throw up on the
+web site about products that haven't been created yet. The business
+development people misread it to spin weird fantasies about how the product
+will cure baldness and warts and stuff, but it gets investors, so that's OK.
+The developers read it so that they know what code to write. The customers
+read it to make sure the developers are building a product that they would
+want to pay for. The technical writers read it and write a nice manual (that
+gets lost or thrown away, but that's a different story). The managers read it
+so that they can look like they know what's going on in management meetings.
+And so on.</p>
+</blockquote>
+<h2>Part 2</h2>
+<blockquote>
+<p>When you're building a product with a team, everybody tends to have their
+favorite, real or imagined pet features that they just can't live without. If
+you do them all, it will take infinite time and cost too much money. You have
+to start culling features right away, and the best way to do this is with a
+"nongoals" section of the spec. Things we are just not going to do. A nongoal
+might be a feature you won't have ("no telepathic user interface!") or it
+might be something more general ("We don't care about performance in this
+release. The product can be slow, as long as it works. If we have time in
+version 2, we'll optimize the slow bits.") These nongoals are likely to cause
+some debate, but it's important to get it out in the open as soon as possible.
+"Not gonna do it!" as George Sr. puts it.</p>
+</blockquote>
+<h2>Part 3</h2>
+<blockquote>
+<p>Program managers are invaluable. If you've ever complained about how
+programmers are more concerned with technical elegance than with
+marketability, you need a program manager. If you've ever complained
+about how people who can write good code never do a good job of writing
+good English, you need a program manager. If you've ever complained about
+how your product seems to drift without any clear direction, you need a
+program manager.</p>
+</blockquote>
+<h2>Part 4</h2>
+<blockquote>
+<p>So. Specs are good, but not if nobody reads them. As a spec-writer, you
+have to trick people into reading your stuff, and you should also probably
+make an effort not to cause any already-too-small brains to leak out
+through eye-sockets.</p>
+</blockquote>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="./archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="./categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

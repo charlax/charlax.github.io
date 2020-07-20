@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Maslow's pyramid of code review | dein.fr
+</title>
+  <link rel="canonical" href="./2015-02-18-maslows-pyramid-of-code-review.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="./theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="./theme/css/style.css">
+
+
+<meta name="description" content="Maslow's pyramid can help us think about what great code reviews look like.">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="./">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="./pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Maslow's pyramid of code review
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2015-02-18T04:15:00+01:00">
+        <i class="fa fa-clock-o"></i>
+        Wed 18 February 2015
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="./category/code.html">code</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p><img alt="" src="https://36.media.tumblr.com/72e7200921159a4374b7fc163fe0f6f2/tumblr_njwlh7rZui1qgj0nao1_400.png"></p>
+<p>As in Maslow's pyramid, each layer requires the previous one. It is useless for code that is charging the wrong customer to be readable.</p>
+<p>Code should be:</p>
+<ul>
+<li><strong>Correct</strong>: does the code do what it's supposed to? Does it handle edge cases? Is it adequately tested to make sure that it stays correct even when other engineers modify it? Is it performant enough for this use case?</li>
+<li><strong>Secure</strong>: does the code have vulnerabilities? Is the data stored safely? Is personal identification information (PII) handled correctly? Could the code be used to induce a DOS? Is input validation comprehensive enough?</li>
+<li><strong>Readable</strong>: is the code easy to read and comprehend? Does it make clear what the business requirements are (code is written to be read by a human, not by a computer)? Are tests concise enough? Are variables, functions and classes named appropriately? Do the domain models cleanly map the real world to reduce cognitive load? Does it use consistent coding convention?</li>
+<li><strong>Elegant</strong>: does the code leverage well-known patterns? Does it achieve what it needs to do without sacrificing simplicity and conciseness? Would you be excited to work in this code? Would you be proud of this code?</li>
+<li><strong>Altruist</strong>: does the code leave the codebase better than what it was? Does it inspire other engineers to improve their code as well? Is it cleaning up unused code, improving documentation, introducing better patterns through small-scale refactoring?</li>
+</ul>
+<p><em>Update Feb 18th</em>: there's some great comments on <a href="https://www.reddit.com/r/programming/comments/2wau2x/maslows_pyramid_of_code_review/">reddit</a> about this. I removed the notion of large refactor because I think small refactors have a higher probability of success. I also added a comment about why layering matters.</p>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="./archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="./categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

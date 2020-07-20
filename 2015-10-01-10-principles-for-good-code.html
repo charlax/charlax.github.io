@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>10 principles for good code | dein.fr
+</title>
+  <link rel="canonical" href="./2015-10-01-10-principles-for-good-code.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="./theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="./theme/css/style.css">
+
+
+<meta name="description" content="Taking inspiration from Dieter Rams' ten principles for good design, here are the ten principles of good code.">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="./">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="./pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>10 principles for good code
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2015-10-01T22:31:45+02:00">
+        <i class="fa fa-clock-o"></i>
+        Thu 01 October 2015
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="./category/code.html">code</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p>It’s always interesting to apply ideas, principles and notions from one field to another. Especially when those two fields are very different.</p>
+<p>For instance, software and product design look very different on the surface. While the former is supposedly about pure mathematical rationality, the latter is, at least apparently, about emotions, psychology i.e. about fathoming the messiness of the human mind and the physical world.</p>
+<p>Is that true? I don’t think so. Code is written primarily for human to read [1]. Code also usually fixes problems that are coming from the physical world, and thus inherits some of its irrationality.</p>
+<p>So, what happens if we apply one of the most regarded designers’ principles to code? Namely, how can Dieter Rams’ <a href="https://en.wikipedia.org/wiki/Dieter_Rams">ten principles for good design</a> [2] enable us to write better code?</p>
+<p><img src="http://40.media.tumblr.com/9022d63c7546866dc64aaa05b35275ae/tumblr_nhjmijf3EF1qjfk8po1_1280.jpg" width="70%" /></p>
+<h2>Good code is innovative</h2>
+<blockquote>
+<p>The possibilities for progression are not, by any means, exhausted.
+Technological development is always offering new opportunities for original
+designs. But imaginative design always develops in tandem with improving
+technology, and can never be an end in itself.</p>
+</blockquote>
+<p>Some problems our code is solving are very old (e.g. moving people across a city). How can we use software, and the machine's capabilities, to better solve them? Even when we’re already using computers (e.g. to scan signed paperwork), how can we use them to go one step further (e.g. ask for an electronic signature), delivering a better experience to the end user?</p>
+<p>Even if you have a well established product that is deemed very innovative today, you’re still at the mercy of a new competitor out-innovating you. The tech sector is full of such examples. Companies that stay successful are the ones which don’t fear to constantly disrupt themselves through technological innovation.</p>
+<h2>Good code makes a product useful</h2>
+<blockquote>
+<p>A product is bought to be used. It has to satisfy not only functional, but also
+psychological and aesthetic criteria. Good design emphasizes the usefulness of
+a product whilst disregarding anything that could detract from it.</p>
+</blockquote>
+<p>Code is written to be used. As I wrote in <a href="./2013-08-16-we-should-not-ship-code.html">We should not ship code</a>, we don’t code for the sake of coding. We code because that’s how a lot of problems can be solved.</p>
+<p>Because code is an intellectual product, its usability needs to be even more an area of focus. Front-end interfaces and back-end API need to provide good affordance, i.e. their capabilities needs to be self-evident for the user.</p>
+<p>Using the pareto principle can be useful here: the codebase should stay focused on the problem at stake, with more than 80% of its LOC being about the business problem. Otherwise, those other functionalities need to be put in libraries, or other services.</p>
+<h2>Good code is aesthetic</h2>
+<blockquote>
+<p>The aesthetic quality of a product is integral to its usefulness because
+products are used every day and have an effect on people and their well-being.
+Only well-executed objects can be beautiful.</p>
+</blockquote>
+<p>Note that while this obviously applies to the web interface or the mobile app’s interface, it also applies to a back-end API.</p>
+<p>Since code is written to be primarily read by human beings, there’s no reason it can’t take inspiration from literature. Describing how code can be made to be aesthetically pleasing would take a much longer blog post, but here’s some ideas:</p>
+<ul>
+<li>Consistency of code style</li>
+<li>Structure showing clarity of thoughts</li>
+<li>Absence of cruft (<code>TODO</code>, <code>FIXME</code>, etc.)</li>
+<li>Orthography and grammar for comments</li>
+<li>Appropriate naming</li>
+<li>Conciseness of code, comments, naming, function</li>
+<li>Reusability of concepts and routines</li>
+</ul>
+<h2>Good code makes a product understandable</h2>
+<blockquote>
+<p>It clarifies the product’s structure. Better still, it can make the product
+clearly express its function by making use of the user's intuition. At best, it
+is self-explanatory.</p>
+</blockquote>
+<p>Code, more than anything, has a tendency to drift away from the business’ reality. This is one kind of technical debt. When the abstractions that are used in code don’t map the physical world’s reality, they need to be refactored.</p>
+<p>One good way to identify when code is impeding a product’s understandability is to document it. If you find yourself having to give too much context about how code and reality differ, then it means code can be improved.</p>
+<p>Documentation has a tendency to become out of date, so if you need to invest some time, it’s probably safer to invest it in refactoring the code (taking the opportunity of improving the product as well, refactoring for the sake of refactoring rarely brings enough value) to make it more self-documenting.</p>
+<h2>Good code is unobtrusive</h2>
+<blockquote>
+<p>Products fulfilling a purpose are like tools. They are neither decorative
+objects nor works of art. Their design should therefore be both neutral and
+restrained, to leave room for the user’s self-expression.</p>
+</blockquote>
+<p>Code can go too far. Overusing abstraction (here’s an interesting article about how <a href="http://jeremymikkola.com/posts/2015_08_28_warming_up_to_go.html">Go is an anti-abstraction language</a>), using fancy data structures, overly complex libraries (for instance, using an ORM where it’s not needed), reinventing the wheel: all of those get in the way of having code that is actually maintainable.</p>
+<p>This is another point I’ve made in <a href="./2015-02-18-maslows-pyramid-of-code-review.html">Maslow’s pyramid of code review</a>. Code that is elegant for the sake of being elegant and at the expense of being correct is just getting in the way, and should be refactored or removed.</p>
+<h2>Good code is honest</h2>
+<blockquote>
+<p>It does not make a product more innovative, powerful or valuable than it really
+is. It does not attempt to manipulate the consumer with promises that cannot be
+kept.</p>
+</blockquote>
+<p>Over-engineering a solution is a very powerful temptation. Even when a company is moving really fast, and seems to be very far from over-engineering, it can still invest in the wrong area: invest in the wrong tooling too soon, build something from scratch when there are some better off-the-shelf alternatives, etc.</p>
+<h2>Good code is lasting</h2>
+<blockquote>
+<p>It avoids being fashionable and therefore never appears antiquated. Unlike
+fashionable design, it lasts many years – even in today’s throwaway society.</p>
+</blockquote>
+<p>More than in any other domain, software development is plagued with short-lived programming libraries, frameworks, patterns. Pick solutions that are battle-tested, and be conservative in your technical choices.</p>
+<p>Write tests so that functionality can’t be removed and changed without the future maintainer getting explicit feedback about it.</p>
+<h2>Good code is thorough down to the last detail</h2>
+<blockquote>
+<p>Nothing must be arbitrary or left to chance. Care and accuracy in the design
+process show respect towards the user.</p>
+</blockquote>
+<p>Edge cases needs to be accounted for, without going into over-engineering. While it’s fine to sacrifice certain use cases when building an MVP, it’s not what makes the end product delightful. When code elegantly accounts for all edge cases (for instance, through using patterns such as <a href="https://en.wikipedia.org/wiki/Strategy_pattern">strategy</a>), maintenance is easy and edge cases can be fixed as they come, leading to an amazing user experience.</p>
+<p>Also, code is not enough. There’s a lot of context around code that needs to be there:</p>
+<ul>
+<li>Documentation</li>
+<li>Monitoring (operational and business monitoring)</li>
+<li>Alerting</li>
+<li>Testing (unit, integration, end-to-end, capacity)</li>
+<li>Logging and ability to be introspected and debugged</li>
+</ul>
+<h2>Good code is environmentally-friendly</h2>
+<blockquote>
+<p>Design makes an important contribution to the preservation of the environment. &gt; It conserves resources and minimizes physical and visual pollution throughout
+the lifecycle of the product.</p>
+</blockquote>
+<p>Code consumes electricity, which is finite resource. When code is made more performant, it not only has an impact on the customer, but also on the environment.</p>
+<p>Good code also makes efficient use of data structure and algorithm, and promote reusability. Too often the same piece of functionality is copy pasted between codebases, leading to huge loss in developer efficiency. They should be put in libraries, and open sourced when possible.</p>
+<h2>Good code is as little code as possible</h2>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/606-Universal-Shelving-System.jpg" width="70%" /></p>
+<blockquote>
+<p>Less, but better – because it concentrates on the essential aspects, and the
+products are not burdened with non-essentials.
+Back to purity, back to simplicity.</p>
+</blockquote>
+<p>This is my preferred principle. I already talked about it in <a href="./2013-08-16-we-should-not-ship-code.html">We should not ship code</a>, but the basic idea is that software engineering is not primarily about writing code. It’s about solving problems. It just so happens that a lot of problems can be solved through code - but that does not mean that code solves everything.</p>
+<p>How do we write less code?</p>
+<ul>
+<li>By finding existing, off-the-shelf solution and avoiding the NIH (not invented here) syndrome.</li>
+<li>By focusing on the problem at stake, escaping the YAGNI (you ain’t gonna need it) syndrome.</li>
+<li>By spending enough time thinking about the problem, without writing code, so as to design the simplest solution possible (but not any simpler).</li>
+</ul>
+<p>Why having less code is better in the long term is pretty obvious: less maintenance, (usually) more performance, less cognitive load for new developers, etc.</p>
+<h2>Conclusion</h2>
+<p>Because code is as much a literary experience as it is a rational undertaking, using principles coming from product design can be useful to think and talk about code.</p>
+<p>References:</p>
+<ul>
+<li>[1]: Harold Abelson, Structure and Interpretation of Computer Programs</li>
+<li>[2]: Wikipedia contributors, "Dieter Rams," Wikipedia, The Free Encyclopedia, https://en.wikipedia.org/w/index.php?title=Dieter_Rams&amp;oldid=682540168 (accessed October 1, 2015).</li>
+<li>[3]: Vitsoe at en.wikipedia [CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0)], from Wikimedia Commons</li>
+</ul>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="./archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="./categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

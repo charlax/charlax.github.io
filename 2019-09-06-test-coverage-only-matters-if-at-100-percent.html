@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Test coverage only matters if it's at 100% | dein.fr
+</title>
+  <link rel="canonical" href="./2019-09-06-test-coverage-only-matters-if-at-100-percent.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="./theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="./theme/css/style.css">
+
+
+<meta name="description" content="all lines of code should be covered by a test or explicitly excluded from test coverage.">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="./">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="./pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Test coverage only matters if it's at 100%
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2019-09-06T16:26:13+02:00">
+        <i class="fa fa-clock-o"></i>
+        Fri 06 September 2019
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="./category/code.html">code</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p><strong>Summary</strong>: all lines of code should be covered by a test or <em>explicitly</em>
+excluded from test coverage.</p>
+<p>What's your test coverage? What do you consider a good test coverage
+percentage?</p>
+<p>Those questions often get asked during engineering interviews.
+It gives the interviewee a sense of how much the company cares about quality.
+It's also a good question for the candidate because you can't have a cargo
+cult answer. You need to argue. It gives useful insights into one's quality
+mindset.</p>
+<p>I believe the only right value to track for a test coverage metric is 100% of
+the <em>lines that should be covered</em> (<em>not</em> the lines that are written), which
+ensures that the lines that you don't want to cover are explicit, and not
+implicit.</p>
+<p>Please don't skim the articles as you'll find that the point I'm making is pretty common sense. If you still disagree have a look at the response
+to common objections at the end.</p>
+<p><em>Note: I'm using Python for all the examples below, but the principles are
+applicable regardless of the programming language.</em></p>
+<h2>Why you should measure test coverage</h2>
+<p>If you're not already monitoring test coverage, you should probably start now
+(if you don't have tests, that's for another article). Some programming
+languages have better support than others. Python has excellent support for it,
+through <code>pytest</code> and <code>pytest-cov</code> (using <code>coverage</code> under the hood).</p>
+<h3>Test all functionality</h3>
+<p>Test coverage allows you to check which lines of code are run while the tests
+are executed. If some lines are missing coverage, it means you're not testing
+("covering") the underlying behavior. You could introduce a bug, and no test
+would fail, which is not desirable. Introducing a bug should ideally trigger a
+test to fail.</p>
+<p>Let's see a contrived example:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">bread</span> <span class="o">==</span> <span class="s2">&quot;brioche&quot;</span><span class="p">:</span>
+        <span class="o">...</span>
+        <span class="mi">1</span> <span class="o">/</span> <span class="mi">0</span>  <span class="c1"># let&#39;s say a bug is hidden here</span>
+        <span class="k">return</span> <span class="s2">&quot;ok&quot;</span>
+
+    <span class="k">return</span> <span class="n">bread</span>
+
+<span class="k">def</span> <span class="nf">test_toast</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span>
+</code></pre></div>
+
+
+<p>The test will pass, even though <code>toast("brioche")</code> should fail. Adding
+a test for this case will let you find the <code>ZeroDivisionError</code>.</p>
+<h3>Ensure all tests are run</h3>
+<p>Another case for checking is that you want to make sure that your test actually
+run. In this contrived example, the tests will pass, even though one of
+those test does not do anything:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">bread</span>
+
+<span class="k">def</span> <span class="nf">test_identity</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">identity</span><span class="p">(</span><span class="s2">&quot;brioche&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;brioche&quot;</span>
+
+<span class="k">def</span> <span class="nf">test_identity_noop</span><span class="p">():</span>
+    <span class="k">if</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># this is a contrived example, there shouldn&#39;t be any &#39;if&#39; in tests</span>
+        <span class="k">return</span>
+    <span class="k">assert</span> <span class="n">identity</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;baguette&quot;</span>
+</code></pre></div>
+
+
+<p>Once you've agreed that you need test coverage, the question remains: what is the
+right level of coverage? It is very costly to ensure that absolutely every line
+of code is tested. Should it be 80%? 90%?</p>
+<h2>Why you should check for 100% coverage</h2>
+<div class="highlight"><pre><span></span><code><span class="n">TOTAL</span>                                      <span class="mi">18435</span>     <span class="mi">16</span>   <span class="mi">1742</span>      <span class="mi">0</span>    <span class="mi">99</span><span class="o">%</span>
+
+<span class="n">FAIL</span> <span class="n">Required</span> <span class="n">test</span> <span class="n">coverage</span> <span class="k">of</span> <span class="mi">100</span><span class="o">%</span> <span class="k">not</span> <span class="n">reached</span><span class="p">.</span> <span class="n">Total</span> <span class="n">coverage</span><span class="p">:</span> <span class="mi">99</span><span class="p">.</span><span class="mi">86</span><span class="o">%</span>
+</code></pre></div>
+
+
+<p>100% is clear cut.</p>
+<p>Enforcing 100% coverage requires you to be explicit about the lines that don't
+have to be covered ("explicit is better than implicit"). By including the <code>no
+cover</code> marker (or whatever your language/coverage lib supports) next to the
+code that is excluded from coverage, you allow code reviewers to see your
+coverage decisions, and challenge them.</p>
+<p>The problem with having a goal that is not 100% is that it leaves room for
+interpretation and negotiation. If we're currently at 80% and I bring coverage
+at 79.9% because I'm too lazy to test my code (or exclude it from coverage),
+then can't we say that it's ok? Explicit markers in the code make the
+discussion more factual and objective.</p>
+<p>The other problem with something different from 100% is that you might be
+adding coverage in one area, and reducing it in another, without knowing it. It
+might still lead to 80% coverage - but the reduction in coverage might have
+appeared in a crucial area of your code.</p>
+<h2>Will 100% coverage prevent any bug from being introduced?</h2>
+<p>Of course not. Just because a line is run in a test does not mean it is 100%
+correct. You might not be testing all variations. The test might assert the
+wrong thing.</p>
+<p>Some lines of code should be tested twice to ensure they're correct. See this
+contrived example:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">can_toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">bread</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;croissant&quot;</span><span class="p">]</span>  <span class="c1"># this line is covered</span>
+
+<span class="k">def</span> <span class="nf">test_can_toast</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">can_toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+</code></pre></div>
+
+
+<p>All the lines are covered, but I'm not testing that you can't toast <code>"brioche"</code>
+and <code>"baguette"</code>. Let's say this behavior is critical (toasting a croissant is
+a crime!). Without another test, somebody could change the code like this, and
+nothing would break.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">can_toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># this line is still covered</span>
+
+<span class="k">def</span> <span class="nf">test_can_toast</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">can_toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+</code></pre></div>
+
+
+<p>Therefore sometime you definitely should test the same line more than once,
+testing the failure case and the success case. I'd strongly recommend this for
+permission checking for instance.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_can_toast</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">can_toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+
+<span class="k">def</span> <span class="nf">test_can_toast_cannot</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">can_toast</span><span class="p">(</span><span class="s2">&quot;croissant&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span>
+</code></pre></div>
+
+
+<h3>Is this realistic?</h3>
+<p>You don't need to cover 100% of the lines you write. Some are not worth
+covering as you'll see in the examples below. However, you need to cover 100% of the
+lines <strong>you want to be covered</strong>. You need to be explicit about excluding lines
+from coverage. Tools such as Python's <code>coverage</code> allow you to specify which
+line should be excluded from the coverage.</p>
+<p>Using <code>pytest-cov</code> you can achieve this pretty simply:</p>
+<div class="highlight"><pre><span></span><code><span class="n">PLUGGED</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PLUGGED</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="k">return</span> <span class="s2">&quot;ok&quot;</span>
+
+    <span class="o">...</span>
+    <span class="k">return</span> <span class="s2">&quot;ok&quot;</span>
+
+<span class="k">def</span> <span class="nf">test_toast</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;bread&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span>
+</code></pre></div>
+
+
+<p>With this setup, test coverage will be at 100% even though we did not test the
+case where the toaster is not plugged because it is too simple. Writing a test
+for this "functionality" would not be worth it. Therefore we explicitly exclude
+it from coverage. You should revisit this decision if it becomes more complex
+and needs to be tested.</p>
+<h2>What can/should be excluded from coverage?</h2>
+<p>It depends on your codebase and your quality expectations. Also, as
+for any rules, there are exceptions. Examples are writing using Python, but this
+is not language-dependent.</p>
+<h3>Simple error handling</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">bread</span><span class="p">:</span>  <span class="c1"># pragma: no cover - the handling is too obvious</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no bread provided&quot;</span><span class="p">)</span>
+    <span class="o">...</span>
+</code></pre></div>
+
+
+<p>Anything more complicated than that should probably be covered.</p>
+<h3>Proxy functions</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">external_lib</span> <span class="kn">import</span> <span class="n">Toaster</span>
+
+<span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover - we&#39;re just proxying</span>
+    <span class="k">return</span> <span class="n">Toaster</span><span class="o">.</span><span class="n">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>It also applies to thin wrappers you might have in front of your
+dependencies.</p>
+<h3>Code as configuration</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_temperature</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># pragma: no cover - no complexity there</span>
+    <span class="k">if</span> <span class="n">bread</span> <span class="o">==</span> <span class="s2">&quot;brioche&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">elif</span> <span class="n">bread</span> <span class="o">==</span> <span class="s2">&quot;baguette&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">3</span>
+
+    <span class="o">...</span>
+    <span class="k">return</span> <span class="mi">2</span>
+</code></pre></div>
+
+
+<h3>Simple early return/continue</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">breads</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">bread</span> <span class="ow">in</span> <span class="n">breads</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">bread</span><span class="p">:</span>  <span class="c1"># pragma: no cover - simple early continue</span>
+            <span class="k">continue</span>
+
+        <span class="o">...</span>
+
+    <span class="k">return</span> <span class="s2">&quot;ok&quot;</span>
+</code></pre></div>
+
+
+<p>If the early return/continue is part of the logic, or leads to complicated side
+effects, it should be tested.</p>
+<h3>Code that is too difficult to test (rare)</h3>
+<p>In rare cases, it is a perfectly fine decision to exclude some code from
+coverage if the tests are too expensive to write (because of the required
+setup, or the use of an external library, for instance). Again - this should
+only be in rare cases, for instance when you're using an external library that
+is not easy to mock. In most cases, if your code is complicated to test that
+probably means it needs to be refactored - easy-to-test code is usually better
+designed.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">packagea</span> <span class="kn">import</span> <span class="n">A</span>
+<span class="kn">from</span> <span class="nn">packageb</span> <span class="kn">import</span> <span class="n">B</span>
+
+<span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover - too complicated to test</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">expensive_function_that_needs_to_be_mocked</span><span class="p">()</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">expensive_function_that_needs_to_be_mocked</span><span class="p">()</span>
+    <span class="o">...</span>  <span class="c1"># lots of code</span>
+    <span class="k">return</span> <span class="s2">&quot;ok&quot;</span>
+</code></pre></div>
+
+
+<p>Make sure that this code is easy to test manually, and that the code calling it
+is well tested.</p>
+<h3>Debugging/manual test code</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DEBUGGING&quot;</span><span class="p">)</span>
+<span class="n">p</span>
+<span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>  <span class="c1"># pragma: no cover - debugging code</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;toasting </span><span class="si">{</span><span class="n">bread</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="o">...</span>
+    <span class="k">return</span> <span class="s2">&quot;ok&quot;</span>
+</code></pre></div>
+
+
+<h2>What should be covered</h2>
+<p>Here's a list of things that should be covered, ideally more than
+once.</p>
+<h3>Branches</h3>
+<p>If your language supports it, make sure you test all branches:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>        <span class="c1"># 1</span>
+    <span class="k">if</span> <span class="n">bread</span> <span class="o">==</span> <span class="s2">&quot;baguette&quot;</span><span class="p">:</span>          <span class="c1"># 2</span>
+        <span class="n">bread</span> <span class="o">=</span> <span class="s2">&quot;toasted_baguette&quot;</span>   <span class="c1"># 3</span>
+    <span class="k">return</span> <span class="n">bread</span>                     <span class="c1"># 4</span>
+
+
+<span class="k">def</span> <span class="nf">test_toast_baguette</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;toasted_baguette&quot;</span>
+</code></pre></div>
+
+
+<p>You're technically at 100% code coverage, but the case where <code>bread</code> is not
+"baguette" and the <code>if</code> is never evaluated to False: line 2 never jumps to line
+4. If you activate branch coverage, it will be flagged as a partial branch, and
+   coverage won't be at 100%. To fully test it, you'll need:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>        <span class="c1"># 1</span>
+    <span class="k">if</span> <span class="n">bread</span> <span class="o">==</span> <span class="s2">&quot;baguette&quot;</span><span class="p">:</span>          <span class="c1"># 2</span>
+        <span class="n">bread</span> <span class="o">=</span> <span class="s2">&quot;toasted_baguette&quot;</span>   <span class="c1"># 3</span>
+    <span class="k">return</span> <span class="n">bread</span>                     <span class="c1"># 4</span>
+
+
+<span class="k">def</span> <span class="nf">test_toast_baguette</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;toasted_baguette&quot;</span>  <span class="c1"># 2 -&gt; 3 -&gt; 4</span>
+
+<span class="k">def</span> <span class="nf">test_toast_other</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;brioche&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;brioche&quot;</span>  <span class="c1"># 2 -&gt; 4</span>
+</code></pre></div>
+
+
+<p>As shown in this example, this lets you test more functionality, thus reducing
+the probability of bugs.</p>
+<h3>Security: permission check, input sanitization...</h3>
+<p>Anything that relates to security should be heavily tested, with all sorts of
+inputs.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="n">REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;[a-z]+&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">REGEX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">bread</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid bread variant&quot;</span><span class="p">)</span>
+    <span class="o">...</span>
+
+
+<span class="k">def</span> <span class="nf">test_toast_fail</span><span class="p">():</span>  <span class="c1"># note: you can use pytest&#39;s parametrize feature here.</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;12&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;@#*$&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;&lt;script&gt;window.alert(&#39;hello world!&#39;)&lt;/script&gt;&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;&#39;; DROP TABLE users;&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<h3>Complex error handling</h3>
+<p>If error handling is sophisticated enough and can be considered a feature (e.g.
+recovering gracefully from some error) - it needs to be covered.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">doubles</span> <span class="kn">import</span> <span class="n">expect</span>
+
+<span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">bread</span> <span class="o">==</span> <span class="s2">&quot;brioche&quot;</span><span class="p">:</span>
+        <span class="n">toaster</span><span class="o">.</span><span class="n">unplug</span><span class="p">()</span>
+        <span class="n">toaster</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+    <span class="o">...</span>
+
+<span class="k">def</span> <span class="nf">test_toast_fail</span><span class="p">():</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">toaster</span><span class="p">)</span><span class="o">.</span><span class="n">unplug</span><span class="p">()</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">toaster</span><span class="p">)</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">toaster</span><span class="p">(</span><span class="s2">&quot;brioche&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<h3>New functionality (even for proof-of-concept)</h3>
+<p>While it might be tempting to exclude new prototyping code from coverage, I
+think it's a bad idea because that's one more thing to remember and track.
+Moreover, once a feature is shipped, we usually move on to the next feature and
+never clean up our tests. So, it's safer to get into the habit of covering all
+new code.</p>
+<h2>How to get to 100%</h2>
+<ol>
+<li>Start tracking and displaying the test coverage. Make it easy to find
+   uncovered lines (for instance with an HTML report). Have an open discussion
+   with your team.</li>
+<li>Ensure all new code is fully covered, and that coverage can only strictly
+   increase. Some Github bots let you enforce this.</li>
+<li>Before writing new code, check the coverage of the existing functionality,
+   and bring it to 100%. Try to structure your tests so that running a single
+   test file (e.g. <code>test_toaster.py</code>) will cover 100% of its associated code
+   file (<code>toaster.py</code>). It allows for quicker iterations.</li>
+<li>Once you're at 100%, use your preferred tool's configuration to fail the
+   tests if coverage is not 100%.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="n">Coverage</span> <span class="n">HTML</span> <span class="n">written</span> <span class="k">to</span> <span class="n">dir</span> <span class="n">htmlcov</span>
+
+<span class="n">Required</span> <span class="n">test</span> <span class="n">coverage</span> <span class="k">of</span> <span class="mi">100</span><span class="o">%</span> <span class="n">reached</span><span class="p">.</span> <span class="n">Total</span> <span class="n">coverage</span><span class="p">:</span> <span class="mi">100</span><span class="p">.</span><span class="mi">00</span><span class="o">%</span>
+</code></pre></div>
+
+
+<h2>Answer to common objections</h2>
+<h3>100% test coverage does not mean you're testing everything right.</h3>
+<p>Absolutely - this point is explicitly stated in this article. I even give an
+example situation showing how just checking the test coverage leads to missing
+an important test.</p>
+<p>100% test coverage does not make your code invulnerable, and it should
+evidently not be your only metric. This article is only about the test coverage
+metric.</p>
+<h3>A test suite that covers 80% is pretty good</h3>
+<p>Absolutely. It is a good number and a good goal for any
+codebase.</p>
+<p>However, what about that remaining 20 %? Why are they not tested? Will it be clear
+in 2 months why they were not tested? In 6 months? In a year? While it may make
+perfect sense not to test them, you should be explicit about that decision and
+keep the reason in the code.</p>
+<p>If you don't keep the test coverage <em>metric</em> at 100%, then you leave it up to the
+code reviewer to challenge your test coverage assumption.</p>
+<h3>100% is a blanket rule that leaves no room for negotiation</h3>
+<p>Once again, the goal is not to cover 100% of the lines of code - it would be
+almost impossible. Thanks to <code>no cover</code> markers, you can still decide to
+exclude code from coverage. It actually makes this negotiation explicit in the
+code, as opposed to implicit during the code review phase coverage.</p>
+<p>Consider the example below:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">toast</span> <span class="o">==</span> <span class="s2">&quot;brioche&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>Let's say you're fixing a bug in this code, and you find out that the <code>if</code>
+branch is not covered. You're left to wonder why. The developer did not have
+enough time? They decided it was too trivial to need a test?</p>
+<p>With an explicit marker, the intent is clear and gives you insight with what is
+considered appropriate coverage for <em>this</em> codebase:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">toast</span> <span class="o">==</span> <span class="s2">&quot;brioche&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover, trivial error case</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<h3>It is not feasible in an old codebase</h3>
+<p>Right, that's probably the case. However, this is not different from proper
+testing, monitoring, logging practices. Decide if it's important, then start
+with something attainable that brings you closer to the goal, and iterate.</p>
+<p>Also, if it is not a desirable goal for the codebase, then for sure don't monitor
+test coverage!</p>
+<h3>Enforcing 100% test coverage leads to bad tests</h3>
+<p>It bears repeating: this is not about testing 100% of the lines; this is about
+keeping the code coverage metric at 100%. I am not sure how that would lead to
+bad tests.</p>
+<p>Putting too much focus on one particular metric might lead to gaming behavior.
+That does not mean that no metric you should be enforced. I believe that there
+isn't enough material and training about what it takes to write good tests.
+This is beneficial regardless of whether you enforce test coverage. Also, the
+more you talk about test coverage, the more you iterate and learn about
+what it takes to write good tests in your language and codebase.</p>
+<p>What's sure is that it is straightforward to write bad tests. It takes a lot of
+skills, experience, and hygiene to write great, maintainable tests. That's a
+topic for another article.</p>
+<h3>100% coverage only matters for languages without a type checker</h3>
+<p>No. Sure, a type checker might catch some classes of bugs that would require a
+test in a language without type checking, but you still need to test
+correctness (among others).</p>
+<h3>You're creating blind spots</h3>
+<p>Unless you're reviewing your test coverage report after every single commit,
+leaving explicit markers in the code and keeping the metric at 100% is actually
+a much safer practice.</p>
+<p>When working in code that has been excluded, you'll immediately see the <code>no
+cover</code> marker, perhaps with a comment explaining why the code is excluded. This lets you reconsider the coverage decision.</p>
+<p>Any regression in coverage will break the tests.</p>
+<h3>You should not exclude code from coverage because of setup cost</h3>
+<p>This article is not about end-to-end vs. unit testing. I have provided some
+examples of code that I sometimes exclude from testing, but your mileage may
+vary.</p>
+<h2>Changelog</h2>
+<ul>
+<li>09/07/2019: added answer to common objections</li>
+<li>09/06/2019: added summary, clarified that not testing complicated should only
+  apply to extreme cases and a few other points.</li>
+</ul>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="./archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="./categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

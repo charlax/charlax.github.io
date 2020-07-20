@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Writing a subquery with SQLAlchemy core | dein.fr
+</title>
+  <link rel="canonical" href="./writing-a-subquery-with-sqlalchemy-core.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="./theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="./theme/css/style.css">
+
+
+<meta name="description" content="Uses joins, select_from, label.">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="./">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="./pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Writing a subquery with SQLAlchemy core
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2019-07-01T10:23:00+02:00">
+        <i class="fa fa-clock-o"></i>
+        Mon 01 July 2019
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="./category/today-i-learned.html">today-i-learned</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p>We have two tables:</p>
+<ul>
+<li>Folders (<code>id</code>, <code>company_id</code>)</li>
+<li>Milestones (<code>id</code>, <code>is_done</code>, <code>value</code>: i.e. when the milestone will happen)</li>
+<li>Members (<code>folder_id</code>, <code>user_id</code>): a member of this folder</li>
+</ul>
+<p>A folder has multiple milestones and multiple members. We would like to get a
+list of <code>(folder.id, max(milestone.value), member.user_id)</code> for each folder ID
+and member user ID.</p>
+<p>As usual with SQLAlchemy, it is a good idea to start by writing the query in
+plain SQL. Here's one way to do it:</p>
+<div class="highlight"><pre><span></span><code><span class="k">select</span> <span class="n">f1</span><span class="p">.</span><span class="o">*</span><span class="p">,</span> <span class="n">m</span><span class="p">.</span><span class="n">user_id</span> <span class="k">from</span> <span class="p">(</span>
+    <span class="k">select</span> <span class="n">f</span><span class="p">.</span><span class="n">id</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">from</span> <span class="n">folders</span> <span class="n">f</span>
+    <span class="k">join</span> <span class="n">milestones</span> <span class="n">m</span> <span class="k">on</span> <span class="n">m</span><span class="p">.</span><span class="n">folder_id</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">id</span>
+    <span class="k">where</span> <span class="n">f</span><span class="p">.</span><span class="n">company_id</span> <span class="o">=</span> <span class="p">:</span><span class="n">id</span> <span class="k">group</span> <span class="k">by</span> <span class="n">f</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+<span class="k">as</span> <span class="n">f1</span>
+
+<span class="k">left</span> <span class="k">join</span> <span class="n">folders_members</span> <span class="n">m</span> <span class="k">on</span> <span class="n">m</span><span class="p">.</span><span class="n">folder_id</span> <span class="o">=</span> <span class="n">f1</span><span class="p">.</span><span class="n">id</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">f1</span><span class="p">.</span><span class="n">id</span>
+</code></pre></div>
+
+
+<p>And here's how to write it with SQLAlchemy core:</p>
+<div class="highlight"><pre><span></span><code><span class="n">f</span> <span class="o">=</span> <span class="n">t_folders</span><span class="o">.</span><span class="n">c</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">t_milestones</span><span class="o">.</span><span class="n">c</span>
+<span class="n">members_t</span> <span class="o">=</span> <span class="n">t_folders_members</span>
+
+<span class="n">f1</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">select</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)])</span>
+    <span class="o">.</span><span class="n">select_from</span><span class="p">(</span><span class="n">t_folders</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_milestones</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">m</span><span class="o">.</span><span class="n">folder_id</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">and_</span><span class="p">(</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">company_id</span> <span class="o">==</span> <span class="n">company_id</span><span class="p">,</span>
+            <span class="n">m</span><span class="o">.</span><span class="n">is_done</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;f1&quot;</span><span class="p">)</span>
+<span class="n">f2</span> <span class="o">=</span> <span class="n">select</span><span class="p">([</span><span class="n">f1</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">members_t</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">])</span><span class="o">.</span><span class="n">select_from</span><span class="p">(</span>
+    <span class="n">f1</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">members_t</span><span class="p">,</span> <span class="n">members_t</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">folder_id</span> <span class="o">==</span> <span class="n">f1</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">f2</span><span class="p">)</span>
+</code></pre></div>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="./archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="./categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

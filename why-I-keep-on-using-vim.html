@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Why I keep on using Vim instead of going back to TextMate | dein.fr
+</title>
+  <link rel="canonical" href="./why-I-keep-on-using-vim.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="./theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="./theme/css/style.css">
+
+
+<meta name="description" content="Why taking the time to learn Vim is a smart investment.">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="./">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="./pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Why I keep on using Vim instead of going back to TextMate
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2011-12-14T10:53:00+01:00">
+        <i class="fa fa-clock-o"></i>
+        Wed 14 December 2011
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="./category/code.html">code</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p>Disclaimer: this article only conveys my personal point of view. Please excuse my English!</p>
+<h2>Introduction</h2>
+<p>I tried numerous text editors: Komodo, Emacs, Nano, Textwrangler, gedit, SPE, <a href="http://www.sublimetext.com/">Sublime</a>, Coda, <a href="http://www.vicoapp.com/">Vico</a>...</p>
+<p>When I discovered TextMate, I really loved it because it was both flexible and
+Mac-friendly. Even today, I think that it's a great tool that can greatly
+improve productivity.</p>
+<p>Yesterday, MacroMates <a href="http://blog.macromates.com/2011/textmate-2-0-alpha/">released</a> the first public
+Textmate 2.0 alpha version. Its authors acknowledged the long wait that preceded
+this release by stating that it would "provide some relief to those who have been questioning TextMate’s future".</p>
+<p>I began using Vim two weeks ago, and right now I don't see any reason
+why I would get back to TextMate. I'll try to explain in details how I got
+to use Vim and what are its (numerous) advantages.</p>
+<h2>Vim: <a href="http://en.wikipedia.org/wiki/Je_t'aime..._moi_non_plus">Je t'aime moi non plus</a></h2>
+<p>Maybe some other hackers will recognize themselves in this
+behavior: even though I've been using Vim for a long time, <strong>I never
+took the time to really learn it</strong>. I used to think that Vim was too old to be
+interesting: the modal behavior looked really old-fashioned and
+counter-intuitive, to say the least.</p>
+<p>What's paradoxical is that I kept on using Vim, primarily because it's on all
+computers and it's really efficient when modifying system files. Even when
+I tried Emacs, I kept on using Vim because it felt so much faster!</p>
+<p>With the benefit of hindsight, it was really strange because for all the other
+tools I was always trying to improve my productivity (learning keyboard
+shortcuts, tuning configuration files, looking for ways to avoid repetition)
+but I never took the time to really learn Vim: for instance, two weeks ago
+I learned that entering <code>a</code> in normal mode would go into insert mode <em>after</em>
+the cursor…</p>
+<p>Why did I suddenly became aware of this paradox?</p>
+<ul>
+<li>I read numerous articles about Vim on Hacker News (I guess it's <strong>useful
+  procrastination</strong>).</li>
+<li>TextMate was missing key features like split windows.</li>
+<li>I felt that Vim offered so much flexibility and modularity that it
+  would be great to test it.</li>
+</ul>
+<h1>Vim's numerous advantages</h1>
+<p><strong>Vim is free and open source.</strong> Well-known open source projects are
+superior in the long term because they are not dependent on a company's
+objectives.</p>
+<p><strong>Vim is superior for text manipulation.</strong> Most of our
+work in an editor consists in text manipulation. Contrary to Emacs'
+painful shortcuts (from my point of view), Vim's modal mode provides an
+<em>elegant</em> and efficient interface. What is more, most of the shortcuts are
+easily memorable. TextMate does not provide such a great combination of
+ease of use and effectiveness.</p>
+<p><strong>Vim is empowering.</strong> As Bram Moolenaar (Vim's main author) <a href="http://www.moolenaar.net/habits.html">puts
+it</a>, "if you spend a lot of time
+typing plain text, writing programs or HTML, you can save much of that
+time by using a good editor and using it effectively." Vim is great
+because it really puts you in charge. The learning curve is quite steep
+but it's what's exciting!</p>
+<p><strong>Vim has a vibrant community.</strong> I agree that it's also the case for
+Emacs and Textmate. For those who still thinks Vim is old, have a look
+at all those repositories on Github!</p>
+<p><strong>Vim's scripting language is straightfoward.</strong> Again, this is really
+personal, but I find Lisp not very well adapted to scripting. I really
+like Vim's streamlined scripting and configuration files. And you can
+also use Python or Ruby.</p>
+<p><strong>Vim's vision is compelling.</strong> As Jeff Bezos says, "maintain a firm grasp of
+the obvious at all times." To me it is common sense that a text editor should
+focus on efficiency and text manipulation, as Brian Moolenaar puts it:</p>
+<blockquote>
+<p>It has always been the spirit of Unix to have separate programs that
+do their job well, and work together to perform a bigger task.
+Unfortunately, most editors don't work too well together with other
+programs - you can't replace the e-mail editor in Netscape with
+another one, for example. You end up using a crippled editor. Another
+tendency is to include all kinds of functionality inside the editor;
+Emacs is a good example of where this can end up. (Some call it an
+operating system that can also be used to edit text.)</p>
+</blockquote>
+<p>Vim follows the Unix philosophy, which makes it extremely easy to use it
+with other programs. It is not the case for Textmate.</p>
+<p><strong>An editor's configuration files should be put under version control.</strong>
+A text editor is arguably the single most important tool for
+a developer. This is why it should be possible to constantly improve one's
+productivity. TextMate configuration files are not as easy to tweak.</p>
+<p><strong>Vim is everywhere.</strong> Vim is great for sysadmin because it's present on
+most computers.</p>
+<h1>Stuff I don't like in Vim</h1>
+<ul>
+<li>We are in 2012, the user should not have to download syntax files and
+  activate them. It should be the default.</li>
+<li>It should use Perl's regex syntax by default.</li>
+<li>Help files are quite difficult to read at first sight. They could be
+  improved.</li>
+</ul>
+<p>More generally, defaults could be improved. For instance, plugins management
+could be more automated, instead of having to install Pathogen and using <code>git
+submodules</code>. This could happen outside Vim, with a kind of universal repository
+for plugins and a text file that would list all the plugins (like
+<code>.gitmodules</code>). Plugin would be automatically updated regularly.</p>
+<p>Here is another idea to have great defaults: why analyzing all the <code>vimrc</code> that
+have been posted on the web? This methodology has its flaws, but we would get
+a sense of what are the best defaults.</p>
+<h1>How to try Vim</h1>
+<p>If you want to try Vim, just follow these two steps:</p>
+<ul>
+<li>Do <strong>not</strong> use any plugin or anyone else's vimrc. <a href="http://mislav.uniqpath.com/2011/12/vim-revisited/">Really</a>.</li>
+<li>Use <code>vimtutor</code> to learn the basics.</li>
+</ul>
+<h1>Other articles</h1>
+<ul>
+<li><a href="https://github.com/charlax/dotvim">Checkout my vim configuration</a></li>
+<li><a href="http://www.moolenaar.net/habits.html">Seven habits of effective text editing</a></li>
+<li><a href="http://yehudakatz.com/2010/07/29/everyone-who-tried-to-convince-me-to-use-vim-was-wrong/">Everyone Who Tried to Convince Me to use Vim was Wrong</a></li>
+<li><a href="http://mislav.uniqpath.com/2011/12/vim-revisited/">Vim: revisited</a>:
+  a must-read.</li>
+<li><a href="http://vimcasts.org/">Vimcasts</a></li>
+</ul>
+<p><img alt="" src="http://media.tumblr.com/tumblr_lw7fsqf9ge1qfkyvc.png"></p>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="./archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="./categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

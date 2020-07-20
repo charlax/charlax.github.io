@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Negative feedback antipatterns | dein.fr
+</title>
+  <link rel="canonical" href="./2016-12-02-negative-feedback-antipatterns.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="./theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="./theme/css/style.css">
+
+
+<meta name="description" content="Untargeted feedback. Things you can't impact. Things you didn't do. Unspecific feedback. Only positives. The feedback sandwich.">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="./">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="./pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Negative feedback antipatterns
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2016-12-02T12:07:19+01:00">
+        <i class="fa fa-clock-o"></i>
+        Fri 02 December 2016
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="./category/engineering-management.html">engineering-management</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p><img alt="feedback_calvin_hobbes.jpg" src="https://s18.postimg.org/90swa1sq1/feedback_calvin_hobbes.jpg"></p>
+<p><em>Calvin and Hobbes</em></p>
+<p><strong>This article is also available as a <a href="https://speakerdeck.com/charlax/how-to-give-feedback">presentation</a></strong></p>
+<script async class="speakerdeck-embed" data-id="cd52f1dd8aac431c864903af4b44f1d9" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+<p>Uber practices "T3B3", which encourages everyone to share feedback regularly with their peers and their manager. The feedback format is:</p>
+<ul>
+<li>"Ts": 3 things that the person does well</li>
+<li>"Bs": 3 things that they can improve on</li>
+</ul>
+<p>I will be focusing on the latter category in this post, identifying a few redirecting feedback antipatterns I've seen. Examples will be about software engineering but can easily be transferred to another area.</p>
+<p><em>Note: "negative feedback" is not a particularly good expression - I usually prefer "redirecting feedback".</em></p>
+<h1>Introduction to giving redirecting feedback</h1>
+<p>Giving negative/redirecting feedback is a vital skill you'll need for your whole life. It's not a skill that is only useful in the workplace - you're already giving feedback to your friends and family members. Why not learn to be better at it?</p>
+<h2>Book recommendation</h2>
+<p><a href="https://www.amazon.com/Crucial-Conversations-Talking-Stakes-Second/dp/1469266822">Crucial Conversations: Tools for Talking When Stakes Are High</a> is the classic reference on this topic. I recommend reading it. It's a bit repetitive though - you can find some good summaries on the web.</p>
+<p>Another similar school of thought on the topic is <strong>non-violent communication</strong> (<a href="https://en.wikipedia.org/wiki/Nonviolent_Communication">wikipedia</a>). The book that lays out the method is <a href="https://www.amazon.com/Nonviolent-Communication-Language-Life-Changing-Relationships-ebook/dp/B014OISVU4/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1480675015&amp;sr=1-1&amp;keywords=non+violent">Nonviolent Communication: A Language of Life, 3rd Edition: Life-Changing Tools for Healthy Relationships</a>. It provides a similar model as Crucial Conversations.</p>
+<h2>My feedback model: OFNR</h2>
+<p>Here's the model I follow to deliver feedback (it's the non-violent communication one).</p>
+<ol>
+<li><strong>O</strong>bservation of a fact. A fact is rarely controversial, so it's a great way to start a conversation.</li>
+<li><strong>F</strong>eeling: express your feelings and your story. Clarify that it's your story.</li>
+<li><strong>N</strong>eed: state what you value, or the kind of impact you'd like to see.</li>
+<li><strong>R</strong>equest: explain what concrete action the person who's receiving the feedback would need to take.</li>
+</ol>
+<p>E.g.:</p>
+<blockquote>
+<p>[Fact] You said during the review meeting that the wifi-enabled toaster's code was "a piece of shitty spaghetti code". [Story] I think people were put off by that comment, and I felt a bit demotivated because I had spent so much time on it. [Need] We need team members to deliver concerns in a respectful and constructive manner. [Request] You should have proposed some concrete ways we can improve the code, for instance a different code architecture, examples of refactor to take on, and holding people accountable for code quality.</p>
+</blockquote>
+<h2>Concrete ways to train</h2>
+<ul>
+<li>The best way to learn to deliver good negative feedback is to <strong>start by being great at delivering positive feedback</strong>, because there's less barriers to do so. Train yourself to use the model above to deliver positive/reinforcing feedback.</li>
+<li>Write the feedback down and <strong>hold yourself accountable</strong> to deliver it. Often we either forget about the feedback itself, or because we have to think too much about the delivery model, we never actually deliver it.</li>
+<li><strong>Don't deliver it in public</strong> unless you know exactly what you're doing. Make it safe for the other person to receive it, and for you to fail at delivering it.</li>
+<li><strong>Acknowledge that you're trying</strong> to improve your delivery. Start the feedback session with "I'm not great at delivering feedback, so I'm using this new model since a couple days. Tell me how I'm doing".</li>
+<li><strong>Acknowledge when you failed</strong> to deliver it properly. "I'm sorry - I did not deliver this well and I've hurt your feelings. Let me try again."</li>
+</ul>
+<h1>Antipatterns</h1>
+<p>Let's look at a few antipatterns.</p>
+<h2>The "Untargeted feedback" antipattern</h2>
+<p>This is a pretty classical one. Here's an example:</p>
+<blockquote>
+<p>Our team could have been faster at shipping this wifi-enabled toaster.</p>
+</blockquote>
+<p>It's totally unclear how this piece of feedback applies to the individual in question. I usually write my feedback writing with the second person ("you"), and then I quickly sanity check that I'm using it in the redirecting feedback section. This way I'm sure the feedback is targeted to this person.</p>
+<p>Better:</p>
+<blockquote>
+<p>During the kick-off meeting for the wifi-enabled toaster project, <strong>you</strong> did not clarify that there was a strict timeline behind it. As a result, we missed our customer's expectation and delivered late.</p>
+</blockquote>
+<h2>The "Things you can't impact anyway" antipattern</h2>
+<p>A very common antipattern is to talk about things that the feedback receiver has no impact on.</p>
+<p>E.g. (assuming the feedback receiver is an hardware engineer):</p>
+<blockquote>
+<p>The toaster was missing a key feature: toasting an image of the weather on the bread.</p>
+</blockquote>
+<p>This feedback is totally pointless if the feedback receiver has no impact on feature prioritization. Or, if they have, it needs to be made clear in the feedback (see "Untargeted feedback").</p>
+<h2>The "I'll only talk about things you didn't do" antipattern</h2>
+<p>It can be tempting to make the Ts very insightful and specific, and to keep Bs evasive (human beings tend to not like giving redirecting feedback). Here's a classical example:</p>
+<blockquote>
+<p>T1: You did ... which resulted in ...</p>
+<p>T2: You did ... which resulted in ...</p>
+<p>T3: You did ... which resulted in ...</p>
+<p>B1: You could have done more hiring.</p>
+<p>B2: You could have done more training.</p>
+<p>B3: You could have done more mentoring.</p>
+</blockquote>
+<p>While it's not necessarily a bad idea to talk about things the receiver did not do, it's not very helpful if that's the only feedback there is. What's more, the impact of those things missing is usually not laid out for the receiver, which makes the feedback even harder to receive.</p>
+<p>I recommend to have at least two items which are about concrete things the person did, but could have done better. This will be much more actionable. Then you can have one or two "stretch" Bs, i.e. pieces of feedback that focus on things your interlocutor could have done more of. In that case, make sure to clarify why they were part of your expectations, and how it could have been done (e.g. better time prioritization, delegation).</p>
+<p>E.g.:</p>
+<blockquote>
+<p>B1: Yesterday, you said X but did Y.</p>
+<p>B2: You decided to keep working on adding bluetooth to the toaster, even though we decided against it. ...</p>
+</blockquote>
+<h2>The "Let's not be specific" antipattern</h2>
+<p>E.g.:</p>
+<blockquote>
+<p>You sometimes tend to cut corner and sacrifice quality over speed.</p>
+</blockquote>
+<p>Not only this misses an example, but it reads as a personal attack. It is very improbable that the person will react well and find it constructive. Always start with one or two examples, and make sure you link them very concretely to one of the receiver's action.</p>
+<p>Better:</p>
+<blockquote>
+<p>During the toaster project, you decided to not spend any time on manual testing, relying on other people to test your code. As a result, a number of bugs (including ticket T000 and T001) were introduced, and led to a decrease in the product's quality.</p>
+</blockquote>
+<h2>The "Ts but no Bs" antipattern</h2>
+<p>E.g.:</p>
+<blockquote>
+<p>T1: ...</p>
+<p>T2: ...</p>
+<p>T3: ...</p>
+<p>B1: ...</p>
+<p>B2: Sorry I don't have any.</p>
+<p>B3: Sorry I don't have any.</p>
+</blockquote>
+<p>A good rule of thumb is that if you have enough context to give three positive feedback, you need to be able to give three pieces of redirecting feedback. While positive feedback gives a good "tap on the back", negative/redirecting feedback helps us grow. You're actually not helping the receiver if you don't give them actionable and concrete feedback.</p>
+<h2>The "Feedback sandwich" antipattern</h2>
+<p>E.g.:</p>
+<blockquote>
+<p>You did an amazing work with the toaster's admin panel. You did not take into consideration accessibility though - which means that our handicapped users won't be able to use it. But the look and feel of the icons is amazing!</p>
+</blockquote>
+<p>The idea behind the feedback sandwich is to soften the blow by putting the piece of redirecting feedback between two positive ones.</p>
+<p>It's an antipattern because it makes the overall point much weaker, and as a result, will decrease its effectiveness with the receiver. Compare with:</p>
+<blockquote>
+<p>You did not take into consideration accessibility in the toaster's admin panel - which means that our handicapped users won't be able to use it.</p>
+</blockquote>
+<p>The point is much more direct and focused.</p>
+<h1>Conclusion</h1>
+<p>Try the OFNR model in your next feedback session!</p>
+<p><em>Did you like this article? Check out my <a href="https://github.com/charlax/engineering-management">engineering-management</a> Github repository where I curate a list of useful management resources.</em></p>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="./archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="./categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
