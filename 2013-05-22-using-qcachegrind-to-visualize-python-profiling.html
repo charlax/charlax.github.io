@@ -84,22 +84,18 @@
 $ pip install pyprof2calltree
 </code></pre></div>
 
-
 <h2>Profiling</h2>
 <p>Profile your code with <code>cProfile</code> or <code>Profile</code>. <code>pyprof2calltree</code> won't work with <code>hotshot</code>. Store the profile data in a <code>.pstats</code> file.</p>
 <div class="highlight"><pre><span></span><code>$ python -m cProfile -o profile.pstats yourscript.py
 </code></pre></div>
 
-
 <p>Then run:</p>
 <div class="highlight"><pre><span></span><code>$ pyprof2calltree -i profile.pstats -o profile.kgrind
 </code></pre></div>
 
-
 <p>Then open this <code>kgrind</code> file with <code>qcachegrind</code>:</p>
 <div class="highlight"><pre><span></span><code>$ qcachegrind profile.kgrind
 </code></pre></div>
-
 
 <p><img alt="" src="http://media.tumblr.com/8faf28c1b1d9227330b4f185c48982cd/tumblr_inline_mspsujDXvH1qz4rgp.png"></p>
   </div>

@@ -119,7 +119,6 @@ test to fail.</p>
     <span class="k">assert</span> <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span>
 </code></pre></div>
 
-
 <p>The test will pass, even though <code>toast("brioche")</code> should fail. Adding
 a test for this case will let you find the <code>ZeroDivisionError</code>.</p>
 <h3>Ensure all tests are run</h3>
@@ -138,7 +137,6 @@ those test does not do anything:</p>
     <span class="k">assert</span> <span class="n">identity</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;baguette&quot;</span>
 </code></pre></div>
 
-
 <p>Once you've agreed that you need test coverage, the question remains: what is the
 right level of coverage? It is very costly to ensure that absolutely every line
 of code is tested. Should it be 80%? 90%?</p>
@@ -147,7 +145,6 @@ of code is tested. Should it be 80%? 90%?</p>
 
 <span class="n">FAIL</span> <span class="n">Required</span> <span class="n">test</span> <span class="n">coverage</span> <span class="k">of</span> <span class="mi">100</span><span class="o">%</span> <span class="k">not</span> <span class="n">reached</span><span class="p">.</span> <span class="n">Total</span> <span class="n">coverage</span><span class="p">:</span> <span class="mi">99</span><span class="p">.</span><span class="mi">86</span><span class="o">%</span>
 </code></pre></div>
-
 
 <p>100% is clear cut.</p>
 <p>Enforcing 100% coverage requires you to be explicit about the lines that don't
@@ -177,7 +174,6 @@ contrived example:</p>
     <span class="k">assert</span> <span class="n">can_toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
 </code></pre></div>
 
-
 <p>All the lines are covered, but I'm not testing that you can't toast <code>"brioche"</code>
 and <code>"baguette"</code>. Let's say this behavior is critical (toasting a croissant is
 a crime!). Without another test, somebody could change the code like this, and
@@ -189,7 +185,6 @@ nothing would break.</p>
     <span class="k">assert</span> <span class="n">can_toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
 </code></pre></div>
 
-
 <p>Therefore sometime you definitely should test the same line more than once,
 testing the failure case and the success case. I'd strongly recommend this for
 permission checking for instance.</p>
@@ -199,7 +194,6 @@ permission checking for instance.</p>
 <span class="k">def</span> <span class="nf">test_can_toast_cannot</span><span class="p">():</span>
     <span class="k">assert</span> <span class="n">can_toast</span><span class="p">(</span><span class="s2">&quot;croissant&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span>
 </code></pre></div>
-
 
 <h3>Is this realistic?</h3>
 <p>You don't need to cover 100% of the lines you write. Some are not worth
@@ -221,7 +215,6 @@ line should be excluded from the coverage.</p>
     <span class="k">assert</span> <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;bread&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span>
 </code></pre></div>
 
-
 <p>With this setup, test coverage will be at 100% even though we did not test the
 case where the toaster is not plugged because it is too simple. Writing a test
 for this "functionality" would not be worth it. Therefore we explicitly exclude
@@ -238,7 +231,6 @@ is not language-dependent.</p>
     <span class="o">...</span>
 </code></pre></div>
 
-
 <p>Anything more complicated than that should probably be covered.</p>
 <h3>Proxy functions</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">external_lib</span> <span class="kn">import</span> <span class="n">Toaster</span>
@@ -246,7 +238,6 @@ is not language-dependent.</p>
 <span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pragma: no cover - we&#39;re just proxying</span>
     <span class="k">return</span> <span class="n">Toaster</span><span class="o">.</span><span class="n">toast</span><span class="p">(</span><span class="n">bread</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p>It also applies to thin wrappers you might have in front of your
 dependencies.</p>
@@ -262,7 +253,6 @@ dependencies.</p>
     <span class="k">return</span> <span class="mi">2</span>
 </code></pre></div>
 
-
 <h3>Simple early return/continue</h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">toast</span><span class="p">(</span><span class="n">breads</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">bread</span> <span class="ow">in</span> <span class="n">breads</span><span class="p">:</span>
@@ -273,7 +263,6 @@ dependencies.</p>
 
     <span class="k">return</span> <span class="s2">&quot;ok&quot;</span>
 </code></pre></div>
-
 
 <p>If the early return/continue is part of the logic, or leads to complicated side
 effects, it should be tested.</p>
@@ -295,7 +284,6 @@ designed.</p>
     <span class="k">return</span> <span class="s2">&quot;ok&quot;</span>
 </code></pre></div>
 
-
 <p>Make sure that this code is easy to test manually, and that the code calling it
 is well tested.</p>
 <h3>Debugging/manual test code</h3>
@@ -309,7 +297,6 @@ is well tested.</p>
         <span class="o">...</span>
     <span class="k">return</span> <span class="s2">&quot;ok&quot;</span>
 </code></pre></div>
-
 
 <h2>What should be covered</h2>
 <p>Here's a list of things that should be covered, ideally more than
@@ -325,7 +312,6 @@ once.</p>
 <span class="k">def</span> <span class="nf">test_toast_baguette</span><span class="p">():</span>
     <span class="k">assert</span> <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;baguette&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;toasted_baguette&quot;</span>
 </code></pre></div>
-
 
 <p>You're technically at 100% code coverage, but the case where <code>bread</code> is not
 "baguette" and the <code>if</code> is never evaluated to False: line 2 never jumps to line
@@ -343,7 +329,6 @@ once.</p>
 <span class="k">def</span> <span class="nf">test_toast_other</span><span class="p">():</span>
     <span class="k">assert</span> <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;brioche&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;brioche&quot;</span>  <span class="c1"># 2 -&gt; 4</span>
 </code></pre></div>
-
 
 <p>As shown in this example, this lets you test more functionality, thus reducing
 the probability of bugs.</p>
@@ -374,7 +359,6 @@ inputs.</p>
         <span class="n">toast</span><span class="p">(</span><span class="s2">&quot;&#39;; DROP TABLE users;&quot;</span><span class="p">)</span>
 </code></pre></div>
 
-
 <h3>Complex error handling</h3>
 <p>If error handling is sophisticated enough and can be considered a feature (e.g.
 recovering gracefully from some error) - it needs to be covered.</p>
@@ -395,7 +379,6 @@ recovering gracefully from some error) - it needs to be covered.</p>
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
         <span class="n">toaster</span><span class="p">(</span><span class="s2">&quot;brioche&quot;</span><span class="p">)</span>
 </code></pre></div>
-
 
 <h3>New functionality (even for proof-of-concept)</h3>
 <p>While it might be tempting to exclude new prototyping code from coverage, I
@@ -421,7 +404,6 @@ new code.</p>
 
 <span class="n">Required</span> <span class="n">test</span> <span class="n">coverage</span> <span class="k">of</span> <span class="mi">100</span><span class="o">%</span> <span class="n">reached</span><span class="p">.</span> <span class="n">Total</span> <span class="n">coverage</span><span class="p">:</span> <span class="mi">100</span><span class="p">.</span><span class="mi">00</span><span class="o">%</span>
 </code></pre></div>
-
 
 <h2>Answer to common objections</h2>
 <h3>100% test coverage does not mean you're testing everything right.</h3>
@@ -451,7 +433,6 @@ code, as opposed to implicit during the code review phase coverage.</p>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p>Let's say you're fixing a bug in this code, and you find out that the <code>if</code>
 branch is not covered. You're left to wonder why. The developer did not have
 enough time? They decided it was too trivial to need a test?</p>
@@ -461,7 +442,6 @@ considered appropriate coverage for <em>this</em> codebase:</p>
     <span class="k">if</span> <span class="n">toast</span> <span class="o">==</span> <span class="s2">&quot;brioche&quot;</span><span class="p">:</span>  <span class="c1"># pragma: no cover, trivial error case</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
 </code></pre></div>
-
 
 <h3>It is not feasible in an old codebase</h3>
 <p>Right, that's probably the case. However, this is not different from proper

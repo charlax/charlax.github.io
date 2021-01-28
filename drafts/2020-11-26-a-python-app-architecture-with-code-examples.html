@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>A Python app architecture | dein.fr
+</title>
+  <link rel="canonical" href="../drafts/2020-11-26-a-python-app-architecture-with-code-examples.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="../theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../theme/css/style.css">
+
+
+<meta name="description" content="How to build a complex Python app with all the best practices in place!">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="../">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>A Python app architecture
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2020-11-26T10:27:00+01:00">
+        <i class="fa fa-clock-o"></i>
+        Thu 26 November 2020
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="../category/code.html">code</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p>Here's how to create a modern Python web app in 2020!</p>
+<p>Some of those parts might not work as is, but that's not the point: the point is in showing some good practices for starting a modern Python web app in 2020.</p>
+<h2>Tooling</h2>
+<p>Dev experience:</p>
+<ul>
+<li>mypy (type checking)</li>
+<li>poetry (dependency management)</li>
+<li>flake8 (linting)</li>
+<li>black (autoformatting)</li>
+<li>pytest (test framework)</li>
+<li>isort (sorting imports)</li>
+</ul>
+<h2>Startup</h2>
+<div class="highlight"><pre><span></span><code>poetry new service-name
+<span class="nb">cd</span> service-name
+<span class="nv">$EDITOR</span> pyproject.toml
+rm -Rf tests
+mv README.rst README.md
+</code></pre></div>
+
+<h2>Web framework</h2>
+<p>In this example we will use <a href="https://fastapi.tiangolo.com/">FastAPI</a> but it really does not matter that much, any web framework will do.</p>
+<p>Why FastAPI?</p>
+<ul>
+<li>Modern web practices (JSON by default)</li>
+<li>Fast</li>
+<li>Focuses on the web framework part</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="err">poetry add fastapi</span>
+<span class="err">poetry add -D uvicorn</span>
+</code></pre></div>
+
+<p>Let's first have a health endpoint:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/health&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_health</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">}</span>
+</code></pre></div>
+
+<p>Let's start our Makefile:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SHELL</span> <span class="o">:=</span> bash
+<span class="nf">.ONESHELL</span><span class="o">:</span>
+<span class="nv">.SHELLFLAGS</span> <span class="o">:=</span> -eu -o pipefail -c
+<span class="nf">.DELETE_ON_ERROR</span><span class="o">:</span>
+<span class="nv">MAKEFLAGS</span> <span class="o">+=</span> --warn-undefined-variables
+<span class="nv">MAKEFLAGS</span> <span class="o">+=</span> --no-builtin-rules
+
+<span class="nf">install</span><span class="o">:</span>
+    poetry install
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">install</span>
+
+<span class="nf">serve-local</span><span class="o">:</span>  <span class="c">## Serve the application locally</span>
+    poetry run uvicorn servicename.app:app --reload
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">serve</span>-<span class="n">local</span>
+
+<span class="nv">.DEFAULT_GOAL</span> <span class="o">:=</span> <span class="nb">help</span>
+<span class="nf">help</span><span class="o">:</span> <span class="n">Makefile</span>
+    @grep -E <span class="s1">&#39;(^[a-zA-Z_-]+:.*?##.*$$)|(^##)&#39;</span> <span class="k">$(</span>MAKEFILE_LIST<span class="k">)</span> <span class="p">|</span> awk <span class="s1">&#39;BEGIN {FS = &quot;:.*?## &quot;}; {printf &quot;\033[32m%-30s\033[0m %s\n&quot;, $$1, $$2}&#39;</span> <span class="p">|</span> sed -e <span class="s1">&#39;s/\[32m##/[33m/&#39;</span>
+</code></pre></div>
+
+<p>Then let's make sure this base works fine:</p>
+<div class="highlight"><pre><span></span><code>$ make serve-local
+$ curl http://127.0.0.1:8000/health
+<span class="o">{</span><span class="s2">&quot;msg&quot;</span>:<span class="s2">&quot;ok&quot;</span><span class="o">}</span>
+</code></pre></div>
+
+<h2>Add continuous integration</h2>
+<p>It is a good idea to start with a very strict setup right from the beginning. It is harder to be stricter once there are 1000+ lines of code.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># pytest@latest is required because poetry adds pytest by default</span>
+poetry add requests
+poetry add -D mypy flake8 black pytest@latest isort
+</code></pre></div>
+
+<p>Update the Makefile:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SHELL</span> <span class="o">:=</span> bash
+<span class="nf">.ONESHELL</span><span class="o">:</span>
+<span class="nv">.SHELLFLAGS</span> <span class="o">:=</span> -eu -o pipefail -c
+<span class="nf">.DELETE_ON_ERROR</span><span class="o">:</span>
+<span class="nv">MAKEFLAGS</span> <span class="o">+=</span> --warn-undefined-variables
+<span class="nv">MAKEFLAGS</span> <span class="o">+=</span> --no-builtin-rules
+
+<span class="nf">install</span><span class="o">:</span>  <span class="c"># Install the application locally</span>
+    poetry install
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">install</span>
+
+<span class="nf">serve-local</span><span class="o">:</span>  <span class="c">## Serve the application locally</span>
+    poetry run uvicorn b2b.app:app --reload
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">serve</span>-<span class="n">local</span>
+
+<span class="nf">ci</span><span class="o">:</span> <span class="n">typecheck</span> <span class="n">lint</span> <span class="n">test</span> <span class="c">## Run all checks (test, lint, typecheck)</span>
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">ci</span>
+
+<span class="nf">test</span><span class="o">:</span>  <span class="c">## Run tests</span>
+    poetry run pytest .
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">test</span>
+
+<span class="nf">lint</span><span class="o">:</span>  <span class="c">## Run linting</span>
+    poetry run black --check .
+    poetry run isort -c .
+    poetry run flake8 .
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">lint</span>
+
+<span class="nf">lint-fix</span><span class="o">:</span>  <span class="c">## Run autoformatters</span>
+    poetry run black .
+    poetry run isort .
+
+<span class="nf">typecheck</span><span class="o">:</span>  <span class="c">## Run typechecking</span>
+    poetry run mypy .
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">typecheck</span>
+
+<span class="nv">.DEFAULT_GOAL</span> <span class="o">:=</span> <span class="nb">help</span>
+<span class="nf">help</span><span class="o">:</span> <span class="n">Makefile</span>
+    @grep -E <span class="s1">&#39;(^[a-zA-Z_-]+:.*?##.*$$)|(^##)&#39;</span> <span class="k">$(</span>MAKEFILE_LIST<span class="k">)</span> <span class="p">|</span> awk <span class="s1">&#39;BEGIN {FS = &quot;:.*?## &quot;}; {printf &quot;\033[32m%-30s\033[0m %s\n&quot;, $$1, $$2}&#39;</span> <span class="p">|</span> sed -e <span class="s1">&#39;s/\[32m##/[33m/&#39;</span>
+</code></pre></div>
+
+<p>Set the config in <code>pyproject.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.poetry]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2b&quot;</span>
+<span class="n">version</span> <span class="o">=</span> <span class="s">&quot;0.1.0&quot;</span>
+<span class="n">description</span> <span class="o">=</span> <span class="s">&quot;A lambda to handle B2B integrations&quot;</span>
+<span class="n">authors</span> <span class="o">=</span> <span class="k">[&quot;Charles-Axel Dein &lt;charles@&gt;&quot;]</span>
+
+<span class="k">[tool.poetry.dependencies]</span>
+<span class="n">python</span> <span class="o">=</span> <span class="s">&quot;^3.8&quot;</span>
+<span class="n">fastapi</span> <span class="o">=</span> <span class="s">&quot;^0.61.2&quot;</span>
+<span class="n">requests</span> <span class="o">=</span> <span class="s">&quot;^2.25.0&quot;</span>
+
+<span class="k">[tool.poetry.dev-dependencies]</span>
+<span class="n">pytest</span> <span class="o">=</span> <span class="s">&quot;^6.1.2&quot;</span>
+<span class="n">uvicorn</span> <span class="o">=</span> <span class="s">&quot;^0.12.3&quot;</span>
+<span class="n">mypy</span> <span class="o">=</span> <span class="s">&quot;^0.790&quot;</span>
+<span class="n">flake8</span> <span class="o">=</span> <span class="s">&quot;^3.8.4&quot;</span>
+<span class="n">black</span> <span class="o">=</span> <span class="s">&quot;^20.8b1&quot;</span>
+
+<span class="k">[tool.isort]</span>
+<span class="n">multi_line_output</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">include_trailing_comma</span> <span class="o">=</span> <span class="n">True</span>
+<span class="n">force_grid_wrap</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">use_parentheses</span> <span class="o">=</span> <span class="n">True</span>
+<span class="n">ensure_newline_before_comments</span> <span class="o">=</span> <span class="n">True</span>
+<span class="n">line_length</span> <span class="o">=</span> <span class="mi">88</span>
+
+<span class="k">[build-system]</span>
+<span class="n">requires</span> <span class="o">=</span> <span class="k">[&quot;poetry-core&gt;=1.0.0&quot;]</span>
+<span class="n">build-backend</span> <span class="o">=</span> <span class="s">&quot;poetry.core.masonry.api&quot;</span>
+</code></pre></div>
+
+<p>Add <code>setup.cfg</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[flake8]</span>
+<span class="na">max-line-length</span> <span class="o">=</span> <span class="s">88</span>
+<span class="na">extend-ignore</span> <span class="o">=</span><span class="s"></span>
+<span class="s">    # See https://github.com/PyCQA/pycodestyle/issues/373</span>
+<span class="s">    E203,</span>
+</code></pre></div>
+
+<p>Add <code>servicename/test_app.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_get_health</span><span class="p">(</span><span class="n">api_client</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">api_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+    <span class="k">assert</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="o">==</span> <span class="p">{</span><span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">}</span>
+</code></pre></div>
+
+<p>Add <code>servicename/conftest.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">fastapi.testclient</span> <span class="kn">import</span> <span class="n">TestClient</span>
+
+<span class="kn">from</span> <span class="nn">b2b.app</span> <span class="kn">import</span> <span class="n">app</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
+<span class="k">def</span> <span class="nf">api_client</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">TestClient</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Run all tests:</p>
+<div class="highlight"><pre><span></span><code>$ make ci
+poetry run mypy .
+Success: no issues found in <span class="m">4</span> <span class="nb">source</span> files
+poetry run black --check .
+All <span class="k">done</span>! ✨ 🍰 ✨
+<span class="m">4</span> files would be left unchanged.
+poetry run flake8 .
+poetry run pytest .
+<span class="o">====================================</span> <span class="nb">test</span> session <span class="nv">starts</span> <span class="o">=====================================</span>
+platform darwin -- Python <span class="m">3</span>.9.0, pytest-6.1.2, py-1.9.0, pluggy-0.13.1
+rootdir: /Users/ca/GDC-Code/infra/lambdas/gdc-env/website/b2b
+collected <span class="m">1</span> item
+
+b2b/test_app.py .                                                                      <span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+
+<span class="o">=====================================</span> <span class="m">1</span> passed in <span class="m">0</span>.19s <span class="o">======================================</span>
+</code></pre></div>
+
+<h2>Adding the database</h2>
+<p>We will use sqlalchemy, a SQL ORM that is very light and does not hide SQL from you like most ORM do.</p>
+<div class="highlight"><pre><span></span><code>poetry add sqlalchemy psycopg2 alembic
+poetry run alembic init migrations
+</code></pre></div>
+
+<p>Add <code>servicename/lib/db.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s2">&quot;postgresql+psycopg2://gdc_b2b:gdc_b2b@127.0.0.1:5432/gdc_b2b&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">check_db</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Make sure the DB is there.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select 1&quot;</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</code></pre></div>
+
+<p>Replace the beginning of <code>migrations/env.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">logging.config</span> <span class="kn">import</span> <span class="n">fileConfig</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">engine_from_config</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">pool</span>
+<span class="kn">from</span> <span class="nn">alembic</span> <span class="kn">import</span> <span class="n">context</span>
+
+<span class="kn">from</span> <span class="nn">b2b.lib.db</span> <span class="kn">import</span> <span class="n">DB_URL</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">config</span>
+
+<span class="c1"># Interpret the config file for Python logging.</span>
+<span class="c1"># This line sets up loggers basically.</span>
+<span class="n">fileConfig</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">config_file_name</span><span class="p">)</span>
+
+<span class="c1"># add your model&#39;s MetaData object here for &#39;autogenerate&#39; support</span>
+<span class="n">target_metadata</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">config</span><span class="o">.</span><span class="n">set_main_option</span><span class="p">(</span><span class="s2">&quot;sqlalchemy.url&quot;</span><span class="p">,</span> <span class="n">DB_URL</span><span class="p">)</span>
+</code></pre></div>
+
+<h2>References</h2>
+<ul>
+<li><a href="https://www.serverless.com/flask">The Official Guide to Serverless Flask</a> </li>
+<li><a href="https://fastapi.tiangolo.com/tutorial/sql-databases/">SQL (Relational) Databases - FastAPI</a> </li>
+</ul>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="../archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="../categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

@@ -21,7 +21,6 @@ plain SQL. Here's one way to do it:&lt;/p&gt;
 &lt;span class="k"&gt;order&lt;/span&gt; &lt;span class="k"&gt;by&lt;/span&gt; &lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;And here's how to write it with SQLAlchemy core:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;t_folders&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
 &lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;t_milestones&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;
@@ -65,7 +64,6 @@ plain SQL. Here's one way to do it (see &lt;a href="https://www.periscopedata.co
 &lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;And here's how to write it with SQLAlchemy:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;subq&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;TMilestone&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
     &lt;span class="n"&gt;TMilestone&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_done&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
@@ -90,7 +88,6 @@ the way to the right.&lt;/p&gt;
     &lt;span class="k"&gt;margin-left&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;&lt;img alt="Screenshot showing flex with margin auto" src="http://www.dein.fr/images/flexbox-margin-auto.png"&gt;&lt;/p&gt;
 &lt;p&gt;That's it!&lt;/p&gt;

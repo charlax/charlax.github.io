@@ -98,7 +98,6 @@ plain SQL. Here's one way to do it (see <a href="https://www.periscopedata.com/b
 <span class="p">)</span>
 </code></pre></div>
 
-
 <p>And here's how to write it with SQLAlchemy:</p>
 <div class="highlight"><pre><span></span><code><span class="n">subq</span> <span class="o">=</span> <span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">TMilestone</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
     <span class="n">TMilestone</span><span class="o">.</span><span class="n">is_done</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span>

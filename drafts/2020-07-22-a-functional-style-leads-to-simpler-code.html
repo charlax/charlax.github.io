@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>A functional style leads to simpler code | dein.fr
+</title>
+  <link rel="canonical" href="../drafts/2020-07-22-a-functional-style-leads-to-simpler-code.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="../theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="../theme/css/style.css">
+
+
+<meta name="description" content="Functional programming is picking up steam, and you can take inspiration from it to make your code simpler to read and to test!">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="../">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="../pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>A functional style leads to simpler code
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2020-07-22T10:27:00+02:00">
+        <i class="fa fa-clock-o"></i>
+        Wed 22 July 2020
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="../category/code.html">code</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p>Functional programming (FP) has been picking up steam those last few years. It
+is now the de facto standard for front-end programming with frameworks such as
+React, which leverages a lot of its concepts (higher-order components,
+immutability, reducers, avoiding object-oriented programming constructs
+such inheritance, etc.).</p>
+<p>As a pragmatic programmer who's absolutely not an expert in FP, I'm taking more
+and more inspiration from FP to write code in my day-to-day languages (Python
+and JavaScript/TypeScript, mostly). While those languages are not pure FP
+languages (for instance they don't have strict support for immutability,
+currying by default), they are sufficiently versatile and pragmatic that you
+can absolutely write using a "functional" <em>style</em>.</p>
+<h2>Object-oriented patterns to avoid</h2>
+<p>OOP definitely has its use cases - I've never been a huge fan of dogmatist
+stances such as "only pattern X should be applied". It all depends on the
+context. If you find yourself having to reinvent concepts from OOP with
+functions, you're probably doing it wrong and you should probably reuse
+battle-tested OOP patterns instead.</p>
+<p>That being said, there are a number of OOP patterns and style to avoid. Here
+are two of them:</p>
+<ul>
+<li>Avoid inheritance</li>
+<li>Avoid modifying instance state</li>
+</ul>
+<h3>Avoid inheritance</h3>
+<p>Avoiding inheritance is a pretty old idea, notably popularized by the Gang of
+Four book (<a href="https://en.wikipedia.org/wiki/Design_Patterns">Design Patterns: Elements of Reusable Object-Oriented
+Software</a> published in... 1994),
+but for some reason it still very present in lots of frameworks.</p>
+<p>The React documentation explains it pretty well in <a href="https://reactjs.org/docs/composition-vs-inheritance.html">why composition makes more
+sense than inheritance for
+UI</a>.</p>
+<p>Multiple layers of inheritance leads to code that is very complicated to
+follow, and numerous files to open. Avoid it at all cost. This is even more the
+case when you use abstract classes and have some method to override and some
+with default implementation. Over more than one layer of inheritance, it's
+requires a lot of brain power to understand the flow.</p>
+<p>Let's say you have this "abstract" class:</p>
+<p>```python title="abstract_toaster.py"
+class AbstractToaster:
+    def set_heat(self):
+        raise NotImplementedError()</p>
+<div class="highlight"><pre><span></span><code><span class="n">def</span> <span class="n">heat</span><span class="p">(</span><span class="k">self</span><span class="p">):</span>
+    <span class="k">self</span><span class="p">.</span><span class="n">set_heat</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">def</span> <span class="k">toast</span><span class="p">(</span><span class="k">self</span><span class="p">):</span>
+    <span class="k">self</span><span class="p">.</span><span class="n">heat</span><span class="p">()</span>
+    <span class="k">self</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="k">self</span><span class="p">.</span><span class="n">set_heat</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="k">And</span> <span class="n">this</span> <span class="n">concrete</span> <span class="k">implementation</span><span class="p">:</span>
+
+<span class="o">```</span><span class="n">python</span> <span class="n">title</span><span class="o">=</span><span class="ss">&quot;toaster.py&quot;</span>
+<span class="k">class</span> <span class="n">Toaster</span><span class="p">(</span><span class="n">AbstractToaster</span><span class="p">):</span>
+    <span class="n">def</span> <span class="n">set_heat</span><span class="p">(</span><span class="k">self</span><span class="p">):</span>
+        <span class="p">...</span>
+
+<span class="n">toaster</span> <span class="o">=</span> <span class="n">Toaster</span><span class="p">()</span>
+<span class="n">toaster</span><span class="p">.</span><span class="k">toast</span><span class="p">()</span>
+</code></pre></div>
+
+<p>In <code>toaster.py</code> it is quite impossible to understand what's going on, and
+you'll have to open <code>abstract_toaster.py</code> to understand the flow. This is fine
+with one layer and two files. It becomes a nightmare when there are multiple
+levels, more methods that are more complicated, and multiple parents.</p>
+<h3>Avoid modifying instance state</h3>
+<p>Let's take this example (it is a bit of a caricature) which creates a class to
+sum up list:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Adder</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_value</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">get_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the sum of a list.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_value</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sum</span>
+
+    <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Add the current value to the running sum.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sum</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_value</span>
+
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">Adder</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">get_sum</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">2</span>
+</code></pre></div>
+
+<p>Again - you will never see code like this even in the most object oriented
+codebase. But you might see a similar structure with state stored on the
+instance, modified and queried in different places. This code will prove very
+complicated to test, because you need to take into account the order in which
+things are supposed to be called.</p>
+<p>Everybody knows that global variables should be avoided, because they make code
+difficult to reason about and to test. Well, the previous example is akin to
+this:</p>
+<div class="highlight"><pre><span></span><code><span class="n">_CURRENT_SUM</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">def</span> <span class="nf">get_sum</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Get the sum of a list.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_CURRENT_SUM</span>
+    <span class="n">_CURRENT_SUM</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="n">_CURRENT_SUM</span> <span class="o">+=</span> <span class="n">value</span>
+
+    <span class="k">return</span> <span class="n">_CURRENT_SUM</span>
+
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">get_sum</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">2</span>
+</code></pre></div>
+
+<p>Nobody would write code like this. So why do people do the same with instance
+variables? Just because you can modify instance state does not mean you should.</p>
+<p>What are the issues with modifying instance state?</p>
+<ul>
+<li>It's more difficult to read: because the state <code>self._sum</code> comes from
+  outside the function, so that's one more thing your brain has to keep track
+  of.</li>
+<li>It's more difficult to follow: there are no guarantee that
+  <code>self._sum</code> is not modified somewhere else. In a real world example with
+  subclasses, this becomes a nightmare.</li>
+<li>It's more difficult to test: you have to setup the <code>Adder</code> instance before
+  testing. In a real world example, this might take a few lines.</li>
+</ul>
+<h2>Take inspiration from FP constructs</h2>
+<p>You can take advantages of FP even in languages that are not considered pure FP
+languages. Even though you won't get strict guarantees, it will help you write
+more readable &amp; testable code.</p>
+<h3>Limiting and isolating side effects</h3>
+<p>A function is said to have side effects if it does something than just
+computing value based on its parameters.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">no_side_effect</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;hello, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="c1"># This function prints to screen, which is a side effect</span>
+<span class="k">def</span> <span class="nf">with_side_effect</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;hello, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Another way to think about side effects is testing. If asserting the return
+value of the function is sufficient to validate its core behavior, then it does
+not have any side effect:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># To check the function&#39;s behavior, we only need to check its return value</span>
+<span class="k">def</span> <span class="nf">test_no_side_effet</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">no_side_effect</span><span class="p">(</span><span class="s2">&quot;Louis&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;hello, Louis&quot;</span>
+
+
+<span class="c1"># In this test we have just checked the return value, but we still need to</span>
+<span class="c1"># check that it has printed something on the screen. This test is incomplete.</span>
+<span class="k">def</span> <span class="nf">test_with_side_effet</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">with_side_effect</span><span class="p">(</span><span class="s2">&quot;Louis&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+</code></pre></div>
+
+<p>Here are some examples of side effects:</p>
+<ul>
+<li>Reading/writing the database</li>
+<li>Reading/writing a file</li>
+<li>Printing something on the screen</li>
+<li>Requesting a webservice</li>
+<li>Getting feedback from the user</li>
+</ul>
+<p>Evidently you must have side effects at some point. So the key idea here is to
+cleanly set aside code that has side effect.</p>
+<p>If you follow the Domain Driven Design mindset, this can be done by having all
+side effects in specialized layers, such as Repository, Gateway, etc. Then you
+can strive for side effect-free domain services.</p>
+<p>Regardless, side-effect free functions are easier to test, easier to read and
+easier to debug, so they should be preferred whenever you can. Try to isolate
+the side effects as much as possible:</p>
+<p>Let's say we have a list of image urls and we want to filter out the images
+that are too small. Here's a version that does not cleanly isolate side
+effects:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">MIN_SIZE</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+
+
+<span class="k">def</span> <span class="nf">filter_out_small_images</span><span class="p">(</span><span class="n">image_urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="n">returned</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">image_urls</span><span class="p">:</span>
+        <span class="c1"># this makes an HTTP request</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MIN_SIZE</span><span class="p">:</span>
+            <span class="n">returned</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">returned</span>
+</code></pre></div>
+
+<p>Testing this function is going to be annoying, because we are making HTTP
+requests in the middle of it. Since we should avoid external dependencies in
+unit tests, we'll have to mock out the HTTP request, which will involve a bit
+of code. This function accepts a list, so it might make multiple HTTP calls
+that we'll have to mock - which is even more complicated.</p>
+<p>Another thing we can observe is that this code is not as readable as it could
+be. The true business logic (filtering out small images) is hidden in the
+middle of HTTP logic.</p>
+<p>So the first step is to create a <code>get_size</code> function that has the side effect.
+We still need to wire this with the rest of the logic. Note that as an added
+benefit, <code>get_size</code> is more generic and can be reused for other URLs.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+
+
+<span class="k">def</span> <span class="nf">get_size</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Get an URL&#39;s size.&quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</code></pre></div>
+
+<h3>Embrace a declarative style</h3>
+<p>While imperative code tells the computer what to do, declarative code tells it
+what we want. An imperative style usually mixes implementation details with
+core business logic, while declarative usually expresses pure intent.</p>
+<p>The best example of declarative code is SQL. When we write SQL, we don't tell
+it how to return results, we just tells it what we want:</p>
+<div class="highlight"><pre><span></span><code><span class="k">select</span> <span class="n">brand</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">from</span> <span class="n">products</span> <span class="k">where</span> <span class="n">price</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="k">group</span> <span class="k">by</span> <span class="n">brand</span> <span class="k">order</span> <span class="k">by</span> <span class="n">brand</span>
+</code></pre></div>
+
+<p>Unfortunately we can't (yet) write code like this - but we can use a similar
+style, where we isolate the imperative code and write business logic using
+a higher level language.</p>
+<p>If you look at <code>filter_out_small_images</code>, we use an imperative style: we create
+an empty list, we iterate over image urls and we append to the list when the
+criteria is met. Luckily there are two FP constructs we can use to make this
+more declarative:</p>
+<ul>
+<li><code>map(func, iterable)</code>. It returns an iterable <code>func(iterable[0]), func(iterable[1]), ...</code></li>
+<li><code>filter(func, iterable)</code>. It returns an iterable for which <code>func(item)</code> returns true.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">MIN_SIZE</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+
+
+<span class="k">def</span> <span class="nf">get_size</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Get an URL&#39;s size.&quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">is_large</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_size</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MIN_SIZE</span>
+
+
+<span class="k">def</span> <span class="nf">filter_out_small_images</span><span class="p">(</span><span class="n">image_urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="c1"># We use list() because filter() returns an iterable, not a list</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">is_large</span><span class="p">,</span> <span class="n">image_urls</span><span class="p">))</span>
+</code></pre></div>
+
+<p>If your programming language supports list comprehension, you can use them for
+such a simple example (this is a matter of personal taste, although
+comprehensions are usually reserved for shorter map/filter):</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">filter_out_small_images</span><span class="p">(</span><span class="n">image_urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">url</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">image_urls</span> <span class="k">if</span> <span class="n">is_large</span><span class="p">(</span><span class="n">url</span><span class="p">)]</span>
+</code></pre></div>
+
+<p>As you can see our code is getting even more cleanly separated, with small
+functions doing simple things that are easy to test. We still have to deal with
+the side effect though.</p>
+<p>In what sense can we say this if more declarative? We use <code>filter</code>, which
+guarantees that we are manipulating iterables and returning iterables. Once you
+are used to <code>map</code>, <code>filter</code>, <code>reduce</code>, etc. you immediately know what kind of
+guarantees you get. For instance with <code>filter</code>:</p>
+<ul>
+<li>The input must be an iterable.</li>
+<li>The output is an iterable.</li>
+<li>The output is at most the same length as the input iterable.</li>
+<li>The items in the output were all in the input.</li>
+</ul>
+<p>All those guarantees conspire to make your code easier to reason about, just by
+using <code>filter</code>. Compare to this simplistic example:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">filter_out_small_images</span><span class="p">(</span><span class="n">image_urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="c1"># Okay so it seems we&#39;re going to return a list</span>
+    <span class="n">returned</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">image_urls</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">get_size</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MIN_SIZE</span><span class="p">:</span>
+            <span class="c1"># We are appending the url if it is large enough</span>
+            <span class="n">returned</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">returned</span>
+</code></pre></div>
+
+<p>Using the imperative style, you have to actually read the code to understand
+what's going on.</p>
+<h3>Use bags of data</h3>
+<blockquote>
+<p>It's better to have 100 functions operate on one data structure than 10
+functions on 10 datastructures
+-- Alan Perlis (quoted in Clojure for the brave and true by Daniel Higginbotham)</p>
+</blockquote>
+<p>As we have stated since the beginning, we are still doing side effects in the
+middle of the business logic. It would be nice if we could separate them more
+cleanly, and have filter manipulate simple bags of data. For the sake of the
+example, if you are used to OOP, you might want to write things like this:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+
+
+<span class="k">class</span> <span class="nc">ImageUrl</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+
+    <span class="k">def</span> <span class="nf">get_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">is_large</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="n">ImageUrl</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">url</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">MIN_SIZE</span>
+
+
+<span class="k">def</span> <span class="nf">filter_out_small_images</span><span class="p">(</span><span class="n">image_urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ImageUrl</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ImageUrl</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">is_large</span><span class="p">,</span> <span class="n">image_urls</span><span class="p">))</span>
+</code></pre></div>
+
+<p>This is even worse than what we had in the beginning:</p>
+<ul>
+<li>Our <code>get_size</code> logic is tied to the <code>ImageUrl</code> object and can't be reused.</li>
+<li>We are making an HTTP request inside an object (side effect).</li>
+</ul>
+<p>For such a simple example, it might look fine, but we can do better. Look at
+the following example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">UrlWithSize</span><span class="p">:</span>
+    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="k">def</span> <span class="nf">get_url_with_size</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UrlWithSize</span><span class="p">:</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">get_size</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">UrlWithSize</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Raw notes:</p>
+<ul>
+<li>Simple functions that can be composed. Each function can be tested in isolation.</li>
+<li>Manipulate plain bags of data instead of intelligent object.</li>
+<li>Classes are fine to introduce namespace with some kind of base dependency (e.g. an HTTP client). Only one level of inheritance.</li>
+<li>FP is stricter, e.g. <code>map</code> guarantees same # of values</li>
+<li>Function express intent in a more declarative way</li>
+<li>Functions require less ceremony than OOP</li>
+</ul>
+<h2>References</h2>
+<ul>
+<li>Charles Scalfani, <a href="https://medium.com/@cscalfani/goodbye-object-oriented-programming-a59cda4c0e53#.39ax09e4k">Goodbye, Object Oriented Programming</a></li>
+<li>Matthew Gerstman, <a href="https://www.matthewgerstman.com/tech/functional-programming-fundamentals/">Functional Programming Fundamentals</a></li>
+<li>Robert C. Martin, <a href="https://blog.cleancoder.com/uncle-bob/2014/11/24/FPvsOO.html">OO vs FP</a></li>
+</ul>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="../archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="../categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

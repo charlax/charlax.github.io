@@ -1,5 +1,520 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>dein.fr</title><link href="http://www.dein.fr/" rel="alternate"></link><link href="http://www.dein.fr/feeds/all.atom.xml" rel="self"></link><id>http://www.dein.fr/</id><updated>2019-09-06T16:26:13+02:00</updated><subtitle>Charles-Axel Dein's personal website</subtitle><entry><title>Test coverage only matters if it's at 100%</title><link href="http://www.dein.fr/2019-09-06-test-coverage-only-matters-if-at-100-percent.html" rel="alternate"></link><published>2019-09-06T16:26:13+02:00</published><updated>2019-09-06T16:26:13+02:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2019-09-06:/2019-09-06-test-coverage-only-matters-if-at-100-percent.html</id><summary type="html">&lt;p&gt;all lines of code should be covered by a test or explicitly excluded from test coverage.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Summary&lt;/strong&gt;: all lines of code should be covered by a test or &lt;em&gt;explicitly&lt;/em&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>dein.fr</title><link href="http://www.dein.fr/" rel="alternate"></link><link href="http://www.dein.fr/feeds/all.atom.xml" rel="self"></link><id>http://www.dein.fr/</id><updated>2021-01-28T10:27:00+01:00</updated><subtitle>Charles-Axel Dein's personal website</subtitle><entry><title>A Python project checklist</title><link href="http://www.dein.fr/2021-01-28-python-project-checklist.html" rel="alternate"></link><published>2021-01-28T10:27:00+01:00</published><updated>2021-01-28T10:27:00+01:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2021-01-28:/2021-01-28-python-project-checklist.html</id><summary type="html">&lt;p&gt;All the best practices for setting up a new app in Python&lt;/p&gt;</summary><content type="html">&lt;p&gt;When building a new project, it's a smart move to be very strict right from the
+start. It is much harder to add more linting/typing checks once you have 1000+
+lines of code.&lt;/p&gt;
+&lt;p&gt;That's why I'm providing an opinionated list of libraries for your new Python
+project. I might write a more in-depth article on the best practices when
+building a web app with Python. For now, this is mostly a checklist with some
+obvious recommendations.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Why not a template repo instead of a checklist?&lt;/strong&gt; Template repositories (e.g.
+built with &lt;a href="https://github.com/cookiecutter/cookiecutter"&gt;cookiecutter&lt;/a&gt;) go
+quickly out of date and prevent learning about the in and out of all those best
+practices. They might make sense for your organization, but they're not the
+point of this article.&lt;/p&gt;
+&lt;h2&gt;Summary&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Development tasks: &lt;code&gt;Makefile&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Typechecking: &lt;a href="http://mypy-lang.org/"&gt;mypy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Dependency and virtualenv management: &lt;a href="https://python-poetry.org/"&gt;poetry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Linting: &lt;a href="https://flake8.pycqa.org/en/latest/"&gt;flake8&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Code autoformatting: &lt;a href="https://github.com/psf/black"&gt;black&lt;/a&gt; and &lt;a href="https://pycqa.github.io/isort/"&gt;isort&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Tests: &lt;a href="https://docs.pytest.org/en/stable/"&gt;pytest&lt;/a&gt; with plugins such as
+    &lt;a href="https://github.com/pytest-dev/pytest-cov"&gt;pytest-cov&lt;/a&gt;, &lt;a href="https://pytest-factoryboy.readthedocs.io/en/latest/"&gt;pytest-factoryboy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Docstring: &lt;a href="http://www.pydocstyle.org/en/stable/"&gt;pydocstyle&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Logging: &lt;a href="https://www.structlog.org/en/stable/"&gt;structlog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Configuration: &lt;a href="https://pydantic-docs.helpmanual.io/usage/settings/"&gt;Pydantic BaseSettings&lt;/a&gt; with &lt;a href="https://pypi.org/project/python-dotenv/"&gt;dotenv support&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Error reporting: &lt;a href="https://sentry.io/welcome/"&gt;Sentry&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Documentation: &lt;a href="https://docusaurus.io/"&gt;Docusaurus&lt;/a&gt; or &lt;a href="https://www.sphinx-doc.org/en/master/"&gt;Sphinx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Profiling and performance: &lt;a href="https://docs.python.org/3/library/profile.html"&gt;profile&lt;/a&gt;, &lt;a href="https://github.com/joerick/pyinstrument"&gt;pyinstrument&lt;/a&gt;, &lt;a href="https://github.com/inconshreveable/sqltap"&gt;sqltap&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Other topics:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Data validation: &lt;a href="https://pydantic-docs.helpmanual.io/usage/models/"&gt;Pydantic Models&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;DB ORM: &lt;a href="https://www.sqlalchemy.org/docs/latest/"&gt;sqlalchemy&lt;/a&gt; and &lt;a href="https://alembic.sqlalchemy.org/"&gt;alembic&lt;/a&gt; for migrations&lt;/li&gt;
+&lt;li&gt;Web framework: &lt;a href="https://fastapi.tiangolo.com/"&gt;fastapi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;FP utilities: &lt;a href="https://toolz.readthedocs.io/"&gt;toolz&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;CLI framework: &lt;a href="https://typer.tiangolo.com/"&gt;typer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Not detailed below:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://pre-commit.com/"&gt;pre-commit&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Running development tasks: Makefile&lt;/h2&gt;
+&lt;p&gt;Makefiles are well understood, work almost everywhere, and shorten the ramp-up
+time for fellow developers who might not have much experience with Python.&lt;/p&gt;
+&lt;p&gt;Here's an example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;SHELL&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; bash
+&lt;span class="nf"&gt;.ONESHELL&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="nv"&gt;.SHELLFLAGS&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; -eu -o pipefail -c
+&lt;span class="nf"&gt;.DELETE_ON_ERROR&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="nv"&gt;MAKEFLAGS&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; --warn-undefined-variables
+&lt;span class="nv"&gt;MAKEFLAGS&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; --no-builtin-rules
+
+&lt;span class="nf"&gt;install&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;  &lt;span class="c"&gt;# Install the app locally&lt;/span&gt;
+    poetry install
+&lt;span class="nf"&gt;.PHONY&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt;
+
+&lt;span class="nf"&gt;ci&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;typecheck&lt;/span&gt; &lt;span class="n"&gt;lint&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="c"&gt;## Run all checks (test, lint, typecheck)&lt;/span&gt;
+&lt;span class="nf"&gt;.PHONY&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;ci&lt;/span&gt;
+
+&lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;  &lt;span class="c"&gt;## Run tests&lt;/span&gt;
+    poetry run pytest .
+&lt;span class="nf"&gt;.PHONY&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;
+
+&lt;span class="nf"&gt;lint&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;  &lt;span class="c"&gt;## Run linting&lt;/span&gt;
+    poetry run black --check .
+    poetry run isort -c .
+    poetry run flake8 .
+    poetry run pydocstyle .
+&lt;span class="nf"&gt;.PHONY&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;lint&lt;/span&gt;
+
+&lt;span class="nf"&gt;lint-fix&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;  &lt;span class="c"&gt;## Run autoformatters&lt;/span&gt;
+    poetry run black .
+    poetry run isort .
+&lt;span class="nf"&gt;.PHONY&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;lint&lt;/span&gt;-&lt;span class="n"&gt;fix&lt;/span&gt;
+
+&lt;span class="nf"&gt;typecheck&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;  &lt;span class="c"&gt;## Run typechecking&lt;/span&gt;
+    poetry run mypy --show-error-codes --pretty .
+&lt;span class="nf"&gt;.PHONY&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;typecheck&lt;/span&gt;
+
+&lt;span class="nv"&gt;.DEFAULT_GOAL&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nb"&gt;help&lt;/span&gt;
+&lt;span class="nf"&gt;help&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Makefile&lt;/span&gt;
+    @grep -E &lt;span class="s1"&gt;&amp;#39;(^[a-zA-Z_-]+:.*?##.*$$)|(^##)&amp;#39;&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;MAKEFILE_LIST&lt;span class="k"&gt;)&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; awk &lt;span class="s1"&gt;&amp;#39;BEGIN {FS = &amp;quot;:.*?## &amp;quot;}; {printf &amp;quot;\033[32m%-30s\033[0m %s\n&amp;quot;, $$1, $$2}&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; sed -e &lt;span class="s1"&gt;&amp;#39;s/\[32m##/[33m/&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This is a great article about Makefile: &lt;a href="https://tech.davis-hansson.com/p/make/"&gt;Your Makefiles are wrong&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Typechecking: mypy&lt;/h2&gt;
+&lt;p&gt;Type annotations in Python libraries are not yet pervasive, but getting better
+every day.&lt;/p&gt;
+&lt;p&gt;Supported by Python's founder, Guido van Rossum, &lt;a href="http://mypy-lang.org/"&gt;mypy&lt;/a&gt;
+is the de facto standard. The &lt;a href="https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html"&gt;cheat sheet&lt;/a&gt;
+is a very helpful resource.&lt;/p&gt;
+&lt;p&gt;You can configure mypy inside &lt;code&gt;setup.cfg&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;[mypy]&lt;/span&gt;
+&lt;span class="na"&gt;strict&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;true&lt;/span&gt;
+
+&lt;span class="c1"&gt;# I prefer to be explicit about ignoring packages which do not yet have types:&lt;/span&gt;
+&lt;span class="k"&gt;[mypy-psycopg2.*]&lt;/span&gt;
+&lt;span class="na"&gt;ignore_missing_imports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;True&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Dependency and virtualenv management: poetry&lt;/h2&gt;
+&lt;p&gt;Unfortunately because of the way &lt;code&gt;pip&lt;/code&gt; installs dependencies, you have to deal
+with virtualenv in most cases (although &lt;a href="https://pdm.fming.dev/"&gt;things might change rapidly with pdm&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;Nowadays I'd recommend using &lt;a href="https://python-poetry.org/"&gt;poetry&lt;/a&gt;. It is not
+yet absolutely perfect, but it provides a very elegant CLI API.&lt;/p&gt;
+&lt;p&gt;It's super easy to start a project:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;poetry new service-name
+&lt;span class="nb"&gt;cd&lt;/span&gt; service-name
+&lt;span class="nv"&gt;$EDITOR&lt;/span&gt; pyproject.toml
+rm -Rf tests
+mv README.rst README.md
+
+poetry add sqlalchemy  &lt;span class="c1"&gt;# for instance&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then either go into a virtualenv-enabled shell with &lt;code&gt;poetry shell&lt;/code&gt; or prefix
+your commands with &lt;code&gt;poetry run ...&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Linting: flake8&lt;/h2&gt;
+&lt;p&gt;There are two main linters:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://flake8.pycqa.org/en/latest/"&gt;flake8&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.pylint.org/"&gt;pylint&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I usually rely mostly on flake8 because it has fewer false positives. While
+pylint is super configurable, it includes too many checks to my taste.&lt;/p&gt;
+&lt;p&gt;I use the following configuration (in &lt;code&gt;setup.cfg&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;[flake8]&lt;/span&gt;
+&lt;span class="na"&gt;max-line-length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;99&lt;/span&gt;
+&lt;span class="na"&gt;extend-ignore&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&lt;/span&gt;
+&lt;span class="s"&gt;    # See https://github.com/PyCQA/pycodestyle/issues/373&lt;/span&gt;
+&lt;span class="s"&gt;    E203,&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Code autoformatting: black and isort&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/psf/black"&gt;black&lt;/a&gt; autoformats your code so that you don't
+have to think about it.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://pycqa.github.io/isort/"&gt;isort&lt;/a&gt; is a nice addition to black, it will
+sort your imports to comply with &lt;a href="https://www.python.org/dev/peps/pep-0008/#imports"&gt;PEP 8&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Sort alphabetically&lt;/li&gt;
+&lt;li&gt;Group into standard imports, third-party imports, app imports&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here's my isort config to comply with flake8 and black (in
+&lt;code&gt;pyproject.toml&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;[tool.isort]&lt;/span&gt;
+&lt;span class="n"&gt;multi_line_output&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;span class="n"&gt;include_trailing_comma&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;
+&lt;span class="n"&gt;force_grid_wrap&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;use_parentheses&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;
+&lt;span class="n"&gt;ensure_newline_before_comments&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;
+&lt;span class="n"&gt;line_length&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;88&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Test: pytest with coverage&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://docs.pytest.org/en/stable/"&gt;pytest&lt;/a&gt; has a lot of magical features but
+it makes writing tests so efficient. The fixture system is brilliant and
+super powerful. Using plain &lt;code&gt;assert&lt;/code&gt; instead of having to learn an &lt;code&gt;assertEqual&lt;/code&gt;
+metalanguage makes your life more meaningful.&lt;/p&gt;
+&lt;p&gt;Here's the config I use (in &lt;code&gt;pyproject.toml&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;[tool.pytest.ini_options]&lt;/span&gt;
+&lt;span class="c1"&gt;# Personal preference: I am too used to native traceback&lt;/span&gt;
+&lt;span class="n"&gt;addopts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;--tb=short&amp;quot;&lt;/span&gt;
+
+&lt;span class="k"&gt;[tool.coverage.report]&lt;/span&gt;
+&lt;span class="n"&gt;exclude_lines&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;pragma: no cover&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;def __repr__&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;if __name__ == .__main__.:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;nocov&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;if TYPE_CHECKING:&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="k"&gt;[tool.coverage.run]&lt;/span&gt;
+&lt;span class="c1"&gt;# Activating branch coverage is super important&lt;/span&gt;
+&lt;span class="n"&gt;branch&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;
+&lt;span class="n"&gt;omit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+  &lt;span class="c1"&gt;# add your files to omit here&lt;/span&gt;
+    &lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;I usually use the following plugins and lib:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://pytest-factoryboy.readthedocs.io/en/latest/"&gt;pytest-factoryboy&lt;/a&gt; use
+    factories to create your fixture. Super powerful, and avoids having a single
+    file where all your reusable fixtures are defined a thousand times with
+    different variations.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/pytest-dev/pytest-mock/"&gt;pytest-mock&lt;/a&gt; makes it easier to
+    work with &lt;code&gt;unittest.mock&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/pytest-dev/pytest-cov"&gt;pytest-cov&lt;/a&gt; provides coverage
+    reports for your tests.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/uber/doubles"&gt;doubles&lt;/a&gt;: sadly not maintained anymore (but
+    it still works!), it provides a much simpler and stricter mocking experience
+    than &lt;code&gt;unittest.mock&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://requests-mock.readthedocs.io/en/latest/"&gt;requests-mock&lt;/a&gt; to check
+    integration with HTTP services called with &lt;a href="https://requests.readthedocs.io/en/master/"&gt;requests&lt;/a&gt;. It automatically integrates with pytest and provides a fixture named &lt;code&gt;requests_mock&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Checking docstring: pydocstyle&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://www.pydocstyle.org/en/stable/"&gt;pydocstyle&lt;/a&gt; enforces &lt;a href="https://www.python.org/dev/peps/pep-0257/"&gt;PEP
+257&lt;/a&gt; for docstring styling.&lt;/p&gt;
+&lt;p&gt;Here's my config (in &lt;code&gt;setup.cfg&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;[pydocstyle]&lt;/span&gt;
+&lt;span class="c1"&gt;# Do not require any docstring&lt;/span&gt;
+&lt;span class="n"&gt;ignore&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;D100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;D101&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;D102&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;D103&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;D104&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;D105&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;D106&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;D107&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;D213&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;D203&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Logging: structlog&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.structlog.org/en/stable/"&gt;structlog&lt;/a&gt; is a must-have for all your
+logging needs.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;structlog&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;get_logger&lt;/span&gt;
+
+
+&lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_logger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;saying hello&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="c1"&gt;# instead of :&lt;/span&gt;
+        &lt;span class="c1"&gt;# logger.info(&amp;quot;saying hello to %s&amp;quot;, name)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Structuring your logs has numerous advantages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Immediately parsable by automated tools (kibana, m/r jobs, etc.)&lt;/li&gt;
+&lt;li&gt;Easier to write: you don't have to think about the order of your logging
+    message&lt;/li&gt;
+&lt;li&gt;Flexible: can be further manipulated since all log messages are dicts
+    until they're displayed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can create &lt;code&gt;yourapp.lib.log&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;typing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Dict&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;uuid&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;UUID&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;structlog&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;yourapp.config&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;default&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;TypeError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Can&amp;#39;t serialize &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;dumps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pop&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;default&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dumps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;add_version&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Logger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;method_name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;event_dict&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Dict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Dict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;]:&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Add version to log message.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;event_dict&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;version&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;git_commit_short&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;event_dict&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;ConsoleRenderer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ConsoleRenderer&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_repr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="c1"&gt;# Display shorter uuid&lt;/span&gt;
+        &lt;span class="c1"&gt;# https://www.structlog.org/en/stable/_modules/structlog/dev.html#ConsoleRenderer&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;isinstance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_repr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;configure_logger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;INFO&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;console&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Configure logging.&lt;/span&gt;
+
+&lt;span class="sd"&gt;    console should be True for console (dev) environment.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="c1"&gt;# see https://stackoverflow.com/questions/37703609/using-python-logging-with-aws-lambda&lt;/span&gt;
+    &lt;span class="n"&gt;root&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getLogger&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;handlers&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;handler&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;handlers&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;removeHandler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;handler&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;basicConfig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;format&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;%(message)s&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;level&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;console&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;processors&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+            &lt;span class="n"&gt;add_version&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter_by_level&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_logger_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_log_level&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;processors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TimeStamper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fmt&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s2"&gt; %H:%M.%S&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;processors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackInfoRenderer&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;processors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format_exc_info&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;processors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;JSONRenderer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;serializer&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;dumps&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# nocov&lt;/span&gt;
+        &lt;span class="n"&gt;processors&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_logger_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_log_level&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;PositionalArgumentsFormatter&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;processors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;TimeStamper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fmt&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;%Y-%m-&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s2"&gt; %H:%M.%S&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;processors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;StackInfoRenderer&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+            &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;processors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format_exc_info&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;ConsoleRenderer&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+        &lt;span class="p"&gt;]&lt;/span&gt;
+
+    &lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;configure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;processors&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;processors&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="c1"&gt;# type: ignore&lt;/span&gt;
+        &lt;span class="n"&gt;wrapper_class&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BoundLogger&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;logger_factory&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;structlog&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stdlib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;LoggerFactory&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+        &lt;span class="n"&gt;cache_logger_on_first_use&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Configuration: Pydantic's BaseSettings&lt;/h2&gt;
+&lt;p&gt;Like most people, I usually ended up having my own mechanism for handling
+configuration. Thanks to the web framework fastapi, I've discovered that
+&lt;a href="https://pydantic-docs.helpmanual.io/"&gt;pydantic&lt;/a&gt; provides a very handy
+&lt;a href="https://pydantic-docs.helpmanual.io/usage/settings/"&gt;BaseSettings&lt;/a&gt; class that
+relies on environment variable for its configuration. &lt;code&gt;BaseSettings&lt;/code&gt; provide
+many things that would be annoying to implement from scratch:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Type hints&lt;/li&gt;
+&lt;li&gt;Read from environment variables&lt;/li&gt;
+&lt;li&gt;Validate configuration values&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.env&lt;/code&gt; support with &lt;a href="https://pypi.org/project/python-dotenv/"&gt;python-dotenv&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Secrets support&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pathlib&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Path&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;typing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;List&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Optional&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;dotenv&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;load_dotenv&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;pydantic&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;BaseSettings&lt;/span&gt;
+
+&lt;span class="n"&gt;ENV_FILENAME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;DOTENV&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;.env&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MisconfiguredException&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ne"&gt;Exception&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Config&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BaseSettings&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="c1"&gt;# Please use env_name ONLY for informational purpose (see docs)&lt;/span&gt;
+    &lt;span class="n"&gt;env_name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;
+    &lt;span class="n"&gt;git_commit_short&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;unknown&amp;quot;&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Activate this to get profiling - see documentation.&lt;/span&gt;
+    &lt;span class="n"&gt;is_db_enabled&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;bool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
+
+    &lt;span class="n"&gt;db_user&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;unconfigured&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;db_password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;unconfigured&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;db_name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;unconfigured&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;db_port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;5432&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;db_host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;localhost&amp;quot;&lt;/span&gt;
+
+    &lt;span class="n"&gt;sentry_dsn&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Optional&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_config&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Config&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Get the config.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="c1"&gt;# We follow serverless&amp;#39;s dotenv plugin&amp;#39;s behavior here:&lt;/span&gt;
+    &lt;span class="c1"&gt;# https://www.npmjs.com/package/serverless-dotenv-plugin&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# First load .env&lt;/span&gt;
+    &lt;span class="n"&gt;load_dotenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dotenv_path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.env&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;Path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ENV_FILENAME&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Config file &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;ENV_FILENAME&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt; does not exist.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;ENV_FILENAME&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;endswith&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;.local&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;Expected env filename like &amp;#39;.env.dev&amp;#39;, &amp;quot;&lt;/span&gt;
+            &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;got override ending with .local instead: &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;ENV_FILENAME&lt;/span&gt;&lt;span class="si"&gt;!r}&lt;/span&gt;&lt;span class="s2"&gt;. &amp;quot;&lt;/span&gt;
+            &lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot; Try with &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;ENV_FILENAME&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;.local&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="si"&gt;!r}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Then load .env.{env}&lt;/span&gt;
+    &lt;span class="n"&gt;load_dotenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dotenv_path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;ENV_FILENAME&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Then load .env.{env}.local if it exists&lt;/span&gt;
+    &lt;span class="n"&gt;override&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ENV_FILENAME&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;.local&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;Path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;override&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="n"&gt;load_dotenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dotenv_path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;override&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;Config&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+
+&lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_config&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now you just have to run your commands  like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;DOTENV&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;.env.test poetry run pytest .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Error reporting: Sentry&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://sentry.io/welcome/"&gt;Sentry&lt;/a&gt; is a service that provides exception
+monitoring. Its SDK is very simple to integrate.&lt;/p&gt;
+&lt;p&gt;Usually, I use the following pattern:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# app.py&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;app.lib.log&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;configure_logger&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;app.lib.sentry&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;configure_sentry&lt;/span&gt;
+
+&lt;span class="n"&gt;configure_logger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log_level&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;configure_sentry&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c1"&gt;# app.lib.sentry&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;typing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sentry_sdk&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;structlog&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;get_logger&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;b2b.config&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;
+
+&lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_logger&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;configure_sentry&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Any&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# nocov&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sentry_dsn&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;not configuring sentry&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt;
+
+    &lt;span class="n"&gt;sentry_sdk&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;dsn&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sentry_dsn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;environment&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;env_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;traces_sample_rate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;release&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;git_commit_short&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Documentation: Docusaurus&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://www.sphinx-doc.org/en/master/"&gt;Sphinx&lt;/a&gt; is another great choice
+(especially if you want to get Python code auto-documentation), but at my
+current company Gens de Confiance we use &lt;a href="https://docusaurus.io/"&gt;Docusaurus&lt;/a&gt;,
+a powerful yet simple documentation management tool.&lt;/p&gt;
+&lt;h2&gt;Domain models, data validation: Pydantic&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://pydantic-docs.helpmanual.io/usage/models/"&gt;Pydantic Models&lt;/a&gt; is
+a flexible way to create your domain model objects:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Type hinting&lt;/li&gt;
+&lt;li&gt;Validators&lt;/li&gt;
+&lt;li&gt;Export to json-schema&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can also use Python's standard lib
+&lt;a href="https://docs.python.org/3/library/dataclasses.html"&gt;dataclass&lt;/a&gt; together with
+something like &lt;a href="https://marshmallow.readthedocs.io/en/stable/"&gt;marshmallow&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;ORM: sqlalchemy&lt;/h2&gt;
+&lt;p&gt;If you need to interact with the DB,
+&lt;a href="https://www.sqlalchemy.org/docs/latest/"&gt;sqlalchemy&lt;/a&gt; is a very safe choice. It
+comes with loads of features and is the most used non-Django Python ORM, which
+means that you'll find Stack Overflow solution for all your problems. Using
+&lt;a href="https://alembic.sqlalchemy.org/"&gt;alembic&lt;/a&gt; for DB migrations is the next
+logical move.&lt;/p&gt;
+&lt;p&gt;Both libraries are written by the insanely productive &lt;a href="https://github.com/zzzeek"&gt;Mike
+Bayer&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Web framework: fastapi?&lt;/h2&gt;
+&lt;p&gt;You have a lot of excellent choices when it comes to Python web framework.
+I usually prefer microframework and am currently developing with
+&lt;a href="https://fastapi.tiangolo.com/"&gt;fastapi&lt;/a&gt;, which is a lot of fun to work with.&lt;/p&gt;
+&lt;p&gt;I usually refrain from using any plugins that come with the framework, because
+they are usually too coupled to the framework and the context of an HTTP
+request. I might write an article about my preferred setup.&lt;/p&gt;
+&lt;h2&gt;Utility functions for functional programming: toolz&lt;/h2&gt;
+&lt;p&gt;While Python is not a strict functional programming language, it is possible to
+write FP-styled code with it.  &lt;a href="https://toolz.readthedocs.io/"&gt;toolz&lt;/a&gt; is
+a great companion and provides many utility functions that make writing code
+easier. It has a curried-by-default namespace (&lt;code&gt;from toolz.curried import
+take&lt;/code&gt;). Checkout its &lt;a href="https://toolz.readthedocs.io/en/latest/api.html"&gt;cheat
+sheet&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;ClI framework: typer&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://typer.tiangolo.com/"&gt;typer&lt;/a&gt; (same author as fastapi and pydantic)
+leverages type annotations to make it super easy to write powerful CLI scripts:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+
+&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Say hello.&lt;/span&gt;
+&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;typer&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;typer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;echo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;typer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;prompt&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;password&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;__main__&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;typer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;run&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Performance profiling: pyinstrument and sqltap&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://github.com/joerick/pyinstrument"&gt;pyinstrument&lt;/a&gt; is a recent Python
+    profiler which can export to HTML.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/inconshreveable/sqltap"&gt;sqltap&lt;/a&gt; integrates with
+    sqlalchemy to allow you to introspect SQL queries and also exports to HTML.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Some services (like Sentry) can also profile code thanks to their SDK.
+Otherwise, you can also rely on the standard library module &lt;a href="https://docs.python.org/3/library/profile.html"&gt;profile&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Wishlist&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Lots of inconsistencies for where to put configuration: &lt;code&gt;setup.cfg&lt;/code&gt;,
+    &lt;code&gt;pyproject.toml&lt;/code&gt;, specific files, etc.&lt;/li&gt;
+&lt;li&gt;The more complex the library, the more useful it would be to have type
+    annotations and... the less probable it is to have those annotations.
+    Libraries such as sqlalchemy (coming in 2.0) and toolz don't have official types for now.&lt;/li&gt;
+&lt;li&gt;mypy encourages nominal subtyping (see &lt;a href="https://mypy.readthedocs.io/en/stable/faq.html#can-i-use-duck-typing-with-mypy"&gt;this FAQ&lt;/a&gt;) which is a bit sad because it discourages using simple dicts. Fortunately something like &lt;a href="https://www.python.org/dev/peps/pep-0589/"&gt;PEP 589 TypeDict&lt;/a&gt; will improve things.&lt;/li&gt;
+&lt;li&gt;It would be so nice to avoid having to use virtualenv (even through
+    something like poetry or pipenv). First-time Python developers get so
+    confused about them (compared to Node's simpler &lt;code&gt;node_modules&lt;/code&gt; setup). I'm really looking forward to seeing &lt;a href="https://www.python.org/dev/peps/pep-0582/"&gt;PEP
+    582&lt;/a&gt; deployed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Missing something?&lt;/h2&gt;
+&lt;p&gt;Drop me an email at &lt;code&gt;charles at dein.fr&lt;/code&gt; if you think I'm missing something!&lt;/p&gt;
+&lt;p&gt;For more resources related to Python, check out my repo
+&lt;a href="https://github.com/charlax/python-education"&gt;charlax/python-education&lt;/a&gt;.&lt;/p&gt;</content><category term="code"></category></entry><entry><title>Test coverage only matters if it's at 100%</title><link href="http://www.dein.fr/2019-09-06-test-coverage-only-matters-if-at-100-percent.html" rel="alternate"></link><published>2019-09-06T16:26:13+02:00</published><updated>2019-09-06T16:26:13+02:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2019-09-06:/2019-09-06-test-coverage-only-matters-if-at-100-percent.html</id><summary type="html">&lt;p&gt;all lines of code should be covered by a test or explicitly excluded from test coverage.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Summary&lt;/strong&gt;: all lines of code should be covered by a test or &lt;em&gt;explicitly&lt;/em&gt;
 excluded from test coverage.&lt;/p&gt;
 &lt;p&gt;What's your test coverage? What do you consider a good test coverage
 percentage?&lt;/p&gt;
@@ -40,7 +555,6 @@ test to fail.&lt;/p&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The test will pass, even though &lt;code&gt;toast("brioche")&lt;/code&gt; should fail. Adding
 a test for this case will let you find the &lt;code&gt;ZeroDivisionError&lt;/code&gt;.&lt;/p&gt;
 &lt;h3&gt;Ensure all tests are run&lt;/h3&gt;
@@ -59,7 +573,6 @@ those test does not do anything:&lt;/p&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;identity&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Once you've agreed that you need test coverage, the question remains: what is the
 right level of coverage? It is very costly to ensure that absolutely every line
 of code is tested. Should it be 80%? 90%?&lt;/p&gt;
@@ -68,7 +581,6 @@ of code is tested. Should it be 80%? 90%?&lt;/p&gt;
 
 &lt;span class="n"&gt;FAIL&lt;/span&gt; &lt;span class="n"&gt;Required&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="n"&gt;coverage&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="k"&gt;not&lt;/span&gt; &lt;span class="n"&gt;reached&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Total&lt;/span&gt; &lt;span class="n"&gt;coverage&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;99&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;86&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;100% is clear cut.&lt;/p&gt;
 &lt;p&gt;Enforcing 100% coverage requires you to be explicit about the lines that don't
@@ -98,7 +610,6 @@ contrived example:&lt;/p&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;can_toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;All the lines are covered, but I'm not testing that you can't toast &lt;code&gt;"brioche"&lt;/code&gt;
 and &lt;code&gt;"baguette"&lt;/code&gt;. Let's say this behavior is critical (toasting a croissant is
 a crime!). Without another test, somebody could change the code like this, and
@@ -110,7 +621,6 @@ nothing would break.&lt;/p&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;can_toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Therefore sometime you definitely should test the same line more than once,
 testing the failure case and the success case. I'd strongly recommend this for
 permission checking for instance.&lt;/p&gt;
@@ -120,7 +630,6 @@ permission checking for instance.&lt;/p&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_can_toast_cannot&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;can_toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;croissant&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h3&gt;Is this realistic?&lt;/h3&gt;
 &lt;p&gt;You don't need to cover 100% of the lines you write. Some are not worth
@@ -142,7 +651,6 @@ line should be excluded from the coverage.&lt;/p&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;bread&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;With this setup, test coverage will be at 100% even though we did not test the
 case where the toaster is not plugged because it is too simple. Writing a test
 for this "functionality" would not be worth it. Therefore we explicitly exclude
@@ -159,7 +667,6 @@ is not language-dependent.&lt;/p&gt;
     &lt;span class="o"&gt;...&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Anything more complicated than that should probably be covered.&lt;/p&gt;
 &lt;h3&gt;Proxy functions&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;external_lib&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Toaster&lt;/span&gt;
@@ -167,7 +674,6 @@ is not language-dependent.&lt;/p&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover - we&amp;#39;re just proxying&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;Toaster&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bread&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;It also applies to thin wrappers you might have in front of your
 dependencies.&lt;/p&gt;
@@ -183,7 +689,6 @@ dependencies.&lt;/p&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h3&gt;Simple early return/continue&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;breads&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;List&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;bread&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;breads&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
@@ -194,7 +699,6 @@ dependencies.&lt;/p&gt;
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;If the early return/continue is part of the logic, or leads to complicated side
 effects, it should be tested.&lt;/p&gt;
@@ -216,7 +720,6 @@ designed.&lt;/p&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Make sure that this code is easy to test manually, and that the code calling it
 is well tested.&lt;/p&gt;
 &lt;h3&gt;Debugging/manual test code&lt;/h3&gt;
@@ -230,7 +733,6 @@ is well tested.&lt;/p&gt;
         &lt;span class="o"&gt;...&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;What should be covered&lt;/h2&gt;
 &lt;p&gt;Here's a list of things that should be covered, ideally more than
@@ -246,7 +748,6 @@ once.&lt;/p&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_toast_baguette&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;baguette&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;toasted_baguette&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;You're technically at 100% code coverage, but the case where &lt;code&gt;bread&lt;/code&gt; is not
 "baguette" and the &lt;code&gt;if&lt;/code&gt; is never evaluated to False: line 2 never jumps to line
@@ -264,7 +765,6 @@ once.&lt;/p&gt;
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test_toast_other&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
     &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;  &lt;span class="c1"&gt;# 2 -&amp;gt; 4&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;As shown in this example, this lets you test more functionality, thus reducing
 the probability of bugs.&lt;/p&gt;
@@ -295,7 +795,6 @@ inputs.&lt;/p&gt;
         &lt;span class="n"&gt;toast&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;#39;; DROP TABLE users;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h3&gt;Complex error handling&lt;/h3&gt;
 &lt;p&gt;If error handling is sophisticated enough and can be considered a feature (e.g.
 recovering gracefully from some error) - it needs to be covered.&lt;/p&gt;
@@ -316,7 +815,6 @@ recovering gracefully from some error) - it needs to be covered.&lt;/p&gt;
     &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pytest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;raises&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="n"&gt;toaster&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h3&gt;New functionality (even for proof-of-concept)&lt;/h3&gt;
 &lt;p&gt;While it might be tempting to exclude new prototyping code from coverage, I
@@ -342,7 +840,6 @@ new code.&lt;/p&gt;
 
 &lt;span class="n"&gt;Required&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt; &lt;span class="n"&gt;coverage&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;reached&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Total&lt;/span&gt; &lt;span class="n"&gt;coverage&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Answer to common objections&lt;/h2&gt;
 &lt;h3&gt;100% test coverage does not mean you're testing everything right.&lt;/h3&gt;
@@ -372,7 +869,6 @@ code, as opposed to implicit during the code review phase coverage.&lt;/p&gt;
         &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Let's say you're fixing a bug in this code, and you find out that the &lt;code&gt;if&lt;/code&gt;
 branch is not covered. You're left to wonder why. The developer did not have
 enough time? They decided it was too trivial to need a test?&lt;/p&gt;
@@ -382,7 +878,6 @@ considered appropriate coverage for &lt;em&gt;this&lt;/em&gt; codebase:&lt;/p&gt
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;toast&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;brioche&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# pragma: no cover, trivial error case&lt;/span&gt;
         &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="ne"&gt;ValueError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h3&gt;It is not feasible in an old codebase&lt;/h3&gt;
 &lt;p&gt;Right, that's probably the case. However, this is not different from proper
@@ -715,26 +1210,24 @@ Back to purity, back to simplicity.&lt;/p&gt;
 &lt;span class="err"&gt;Availeth not without a timely start.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;&lt;a href="http://en.wikisource.org/wiki/The_Hare_and_the_Tortoise_(de_La_Fontaine)"&gt;The Hare and the Tortoise&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Etsy's engineering blog "&lt;a href="http://codeascraft.com/about/"&gt;Code as Craft&lt;/a&gt;" can
 easily be considered one of the best ones in the industry.&lt;/p&gt;
 &lt;p&gt;In their definition of "craftsmanship", they make this long quote from &lt;a href="http://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X"&gt;The Pragmatic
 Programmer&lt;/a&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;The construction of software should be an engineering discipline. However,&lt;/span&gt;
-&lt;span class="err"&gt;this doesn’t preclude individual craftsmanship. Think about the large&lt;/span&gt;
-&lt;span class="err"&gt;cathedrals built in Europe during the Middle Ages. Each took thousands of&lt;/span&gt;
-&lt;span class="err"&gt;person-years of effort, spread over many decades. Lessons learned were&lt;/span&gt;
-&lt;span class="err"&gt;passed down to the next set of builders, who advanced the state of&lt;/span&gt;
-&lt;span class="err"&gt;structural engineering with their accomplishments. But the carpenters,&lt;/span&gt;
-&lt;span class="err"&gt;stonecutters, carvers, and glass workers were all craftspeople,&lt;/span&gt;
-&lt;span class="err"&gt;interpreting the engineering requirements to produce a whole that&lt;/span&gt;
-&lt;span class="err"&gt;transcended the purely mechanical side of the construction. It was their&lt;/span&gt;
-&lt;span class="err"&gt;belief in their individual contributions that sustained the projects: We&lt;/span&gt;
-&lt;span class="err"&gt;who cut mere stones must always be envisioning cathedrals. (Quarry worker’s&lt;/span&gt;
-&lt;span class="err"&gt;creed).&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;The&lt;/span&gt; &lt;span class="n"&gt;construction&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;software&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="n"&gt;be&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;engineering&lt;/span&gt; &lt;span class="n"&gt;discipline&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;However&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="n"&gt;this&lt;/span&gt; &lt;span class="n"&gt;doesn&lt;/span&gt;&lt;span class="err"&gt;’&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;preclude&lt;/span&gt; &lt;span class="n"&gt;individual&lt;/span&gt; &lt;span class="n"&gt;craftsmanship&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Think&lt;/span&gt; &lt;span class="n"&gt;about&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;large&lt;/span&gt;
+&lt;span class="n"&gt;cathedrals&lt;/span&gt; &lt;span class="n"&gt;built&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;Europe&lt;/span&gt; &lt;span class="n"&gt;during&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;Middle&lt;/span&gt; &lt;span class="n"&gt;Ages&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Each&lt;/span&gt; &lt;span class="n"&gt;took&lt;/span&gt; &lt;span class="n"&gt;thousands&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt;
+&lt;span class="n"&gt;person&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;years&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;effort&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;spread&lt;/span&gt; &lt;span class="n"&gt;over&lt;/span&gt; &lt;span class="n"&gt;many&lt;/span&gt; &lt;span class="n"&gt;decades&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;Lessons&lt;/span&gt; &lt;span class="n"&gt;learned&lt;/span&gt; &lt;span class="n"&gt;were&lt;/span&gt;
+&lt;span class="n"&gt;passed&lt;/span&gt; &lt;span class="n"&gt;down&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;next&lt;/span&gt; &lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;builders&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;who&lt;/span&gt; &lt;span class="n"&gt;advanced&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt;
+&lt;span class="n"&gt;structural&lt;/span&gt; &lt;span class="n"&gt;engineering&lt;/span&gt; &lt;span class="n"&gt;with&lt;/span&gt; &lt;span class="n"&gt;their&lt;/span&gt; &lt;span class="n"&gt;accomplishments&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;But&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;carpenters&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="n"&gt;stonecutters&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;carvers&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;glass&lt;/span&gt; &lt;span class="n"&gt;workers&lt;/span&gt; &lt;span class="n"&gt;were&lt;/span&gt; &lt;span class="n"&gt;all&lt;/span&gt; &lt;span class="n"&gt;craftspeople&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="n"&gt;interpreting&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;engineering&lt;/span&gt; &lt;span class="n"&gt;requirements&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;produce&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;whole&lt;/span&gt; &lt;span class="n"&gt;that&lt;/span&gt;
+&lt;span class="n"&gt;transcended&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;purely&lt;/span&gt; &lt;span class="n"&gt;mechanical&lt;/span&gt; &lt;span class="n"&gt;side&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;construction&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="n"&gt;It&lt;/span&gt; &lt;span class="n"&gt;was&lt;/span&gt; &lt;span class="n"&gt;their&lt;/span&gt;
+&lt;span class="n"&gt;belief&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;their&lt;/span&gt; &lt;span class="n"&gt;individual&lt;/span&gt; &lt;span class="n"&gt;contributions&lt;/span&gt; &lt;span class="n"&gt;that&lt;/span&gt; &lt;span class="n"&gt;sustained&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;projects&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;We&lt;/span&gt;
+&lt;span class="n"&gt;who&lt;/span&gt; &lt;span class="n"&gt;cut&lt;/span&gt; &lt;span class="n"&gt;mere&lt;/span&gt; &lt;span class="n"&gt;stones&lt;/span&gt; &lt;span class="n"&gt;must&lt;/span&gt; &lt;span class="n"&gt;always&lt;/span&gt; &lt;span class="n"&gt;be&lt;/span&gt; &lt;span class="n"&gt;envisioning&lt;/span&gt; &lt;span class="n"&gt;cathedrals&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Quarry&lt;/span&gt; &lt;span class="n"&gt;worker&lt;/span&gt;&lt;span class="err"&gt;’&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
+&lt;span class="n"&gt;creed&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;There are two parts about craftsmanship: one that is intrinsic, and one that is
 extrinsic.&lt;/p&gt;
@@ -813,22 +1306,18 @@ article&lt;/a&gt;)&lt;/p&gt;
 $ pip install pyprof2calltree
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h2&gt;Profiling&lt;/h2&gt;
 &lt;p&gt;Profile your code with &lt;code&gt;cProfile&lt;/code&gt; or &lt;code&gt;Profile&lt;/code&gt;. &lt;code&gt;pyprof2calltree&lt;/code&gt; won't work with &lt;code&gt;hotshot&lt;/code&gt;. Store the profile data in a &lt;code&gt;.pstats&lt;/code&gt; file.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ python -m cProfile -o profile.pstats yourscript.py
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Then run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ pyprof2calltree -i profile.pstats -o profile.kgrind
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Then open this &lt;code&gt;kgrind&lt;/code&gt; file with &lt;code&gt;qcachegrind&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ qcachegrind profile.kgrind
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;&lt;img alt="" src="http://media.tumblr.com/8faf28c1b1d9227330b4f185c48982cd/tumblr_inline_mspsujDXvH1qz4rgp.png"&gt;&lt;/p&gt;</content><category term="code"></category></entry><entry><title>Why I keep on using Vim instead of going back to TextMate</title><link href="http://www.dein.fr/why-I-keep-on-using-vim.html" rel="alternate"></link><published>2011-12-14T10:53:00+01:00</published><updated>2011-12-14T10:53:00+01:00</updated><author><name>charlax</name></author><id>tag:www.dein.fr,2011-12-14:/why-I-keep-on-using-vim.html</id><summary type="html">&lt;p&gt;Why taking the time to learn Vim is a smart investment.&lt;/p&gt;</summary><content type="html">&lt;p&gt;Disclaimer: this article only conveys my personal point of view. Please excuse my English!&lt;/p&gt;
 &lt;h2&gt;Introduction&lt;/h2&gt;

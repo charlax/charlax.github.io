@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>A Python project checklist | dein.fr
+</title>
+  <link rel="canonical" href="./2021-01-28-python-project-checklist.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://www.dein.fr/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="./theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="./theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="./theme/css/style.css">
+
+
+<meta name="description" content="All the best practices for setting up a new app in Python">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-16694416-8', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="./">dein.fr</a></h1>
+          <p class="text-muted">Charles-Axel Dein's personal website</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="/">Blog</a></li>
+            <li class="list-inline-item"><a href="/category/today-i-learned.html">TIL</a></li>
+            <li class="list-inline-item"><a href="./pages/about.html">About</a></li>
+            <li class=" list-inline-item text-muted">|</li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/charlax/" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-linkedin" href="https://www.linkedin.com/in/charlesaxeldein" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>A Python project checklist
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2021-01-28T10:27:00+01:00">
+        <i class="fa fa-clock-o"></i>
+        Thu 28 January 2021
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="./category/code.html">code</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p>When building a new project, it's a smart move to be very strict right from the
+start. It is much harder to add more linting/typing checks once you have 1000+
+lines of code.</p>
+<p>That's why I'm providing an opinionated list of libraries for your new Python
+project. I might write a more in-depth article on the best practices when
+building a web app with Python. For now, this is mostly a checklist with some
+obvious recommendations.</p>
+<p><strong>Why not a template repo instead of a checklist?</strong> Template repositories (e.g.
+built with <a href="https://github.com/cookiecutter/cookiecutter">cookiecutter</a>) go
+quickly out of date and prevent learning about the in and out of all those best
+practices. They might make sense for your organization, but they're not the
+point of this article.</p>
+<h2>Summary</h2>
+<ul>
+<li>Development tasks: <code>Makefile</code></li>
+<li>Typechecking: <a href="http://mypy-lang.org/">mypy</a></li>
+<li>Dependency and virtualenv management: <a href="https://python-poetry.org/">poetry</a></li>
+<li>Linting: <a href="https://flake8.pycqa.org/en/latest/">flake8</a></li>
+<li>Code autoformatting: <a href="https://github.com/psf/black">black</a> and <a href="https://pycqa.github.io/isort/">isort</a></li>
+<li>Tests: <a href="https://docs.pytest.org/en/stable/">pytest</a> with plugins such as
+    <a href="https://github.com/pytest-dev/pytest-cov">pytest-cov</a>, <a href="https://pytest-factoryboy.readthedocs.io/en/latest/">pytest-factoryboy</a></li>
+<li>Docstring: <a href="http://www.pydocstyle.org/en/stable/">pydocstyle</a></li>
+<li>Logging: <a href="https://www.structlog.org/en/stable/">structlog</a></li>
+<li>Configuration: <a href="https://pydantic-docs.helpmanual.io/usage/settings/">Pydantic BaseSettings</a> with <a href="https://pypi.org/project/python-dotenv/">dotenv support</a></li>
+<li>Error reporting: <a href="https://sentry.io/welcome/">Sentry</a></li>
+<li>Documentation: <a href="https://docusaurus.io/">Docusaurus</a> or <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a></li>
+<li>Profiling and performance: <a href="https://docs.python.org/3/library/profile.html">profile</a>, <a href="https://github.com/joerick/pyinstrument">pyinstrument</a>, <a href="https://github.com/inconshreveable/sqltap">sqltap</a></li>
+</ul>
+<p>Other topics:</p>
+<ul>
+<li>Data validation: <a href="https://pydantic-docs.helpmanual.io/usage/models/">Pydantic Models</a></li>
+<li>DB ORM: <a href="https://www.sqlalchemy.org/docs/latest/">sqlalchemy</a> and <a href="https://alembic.sqlalchemy.org/">alembic</a> for migrations</li>
+<li>Web framework: <a href="https://fastapi.tiangolo.com/">fastapi</a></li>
+<li>FP utilities: <a href="https://toolz.readthedocs.io/">toolz</a></li>
+<li>CLI framework: <a href="https://typer.tiangolo.com/">typer</a></li>
+</ul>
+<p>Not detailed below:</p>
+<ul>
+<li><a href="https://pre-commit.com/">pre-commit</a></li>
+</ul>
+<h2>Running development tasks: Makefile</h2>
+<p>Makefiles are well understood, work almost everywhere, and shorten the ramp-up
+time for fellow developers who might not have much experience with Python.</p>
+<p>Here's an example:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SHELL</span> <span class="o">:=</span> bash
+<span class="nf">.ONESHELL</span><span class="o">:</span>
+<span class="nv">.SHELLFLAGS</span> <span class="o">:=</span> -eu -o pipefail -c
+<span class="nf">.DELETE_ON_ERROR</span><span class="o">:</span>
+<span class="nv">MAKEFLAGS</span> <span class="o">+=</span> --warn-undefined-variables
+<span class="nv">MAKEFLAGS</span> <span class="o">+=</span> --no-builtin-rules
+
+<span class="nf">install</span><span class="o">:</span>  <span class="c"># Install the app locally</span>
+    poetry install
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">install</span>
+
+<span class="nf">ci</span><span class="o">:</span> <span class="n">typecheck</span> <span class="n">lint</span> <span class="n">test</span> <span class="c">## Run all checks (test, lint, typecheck)</span>
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">ci</span>
+
+<span class="nf">test</span><span class="o">:</span>  <span class="c">## Run tests</span>
+    poetry run pytest .
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">test</span>
+
+<span class="nf">lint</span><span class="o">:</span>  <span class="c">## Run linting</span>
+    poetry run black --check .
+    poetry run isort -c .
+    poetry run flake8 .
+    poetry run pydocstyle .
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">lint</span>
+
+<span class="nf">lint-fix</span><span class="o">:</span>  <span class="c">## Run autoformatters</span>
+    poetry run black .
+    poetry run isort .
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">lint</span>-<span class="n">fix</span>
+
+<span class="nf">typecheck</span><span class="o">:</span>  <span class="c">## Run typechecking</span>
+    poetry run mypy --show-error-codes --pretty .
+<span class="nf">.PHONY</span><span class="o">:</span> <span class="n">typecheck</span>
+
+<span class="nv">.DEFAULT_GOAL</span> <span class="o">:=</span> <span class="nb">help</span>
+<span class="nf">help</span><span class="o">:</span> <span class="n">Makefile</span>
+    @grep -E <span class="s1">&#39;(^[a-zA-Z_-]+:.*?##.*$$)|(^##)&#39;</span> <span class="k">$(</span>MAKEFILE_LIST<span class="k">)</span> <span class="p">|</span> awk <span class="s1">&#39;BEGIN {FS = &quot;:.*?## &quot;}; {printf &quot;\033[32m%-30s\033[0m %s\n&quot;, $$1, $$2}&#39;</span> <span class="p">|</span> sed -e <span class="s1">&#39;s/\[32m##/[33m/&#39;</span>
+</code></pre></div>
+
+<p>This is a great article about Makefile: <a href="https://tech.davis-hansson.com/p/make/">Your Makefiles are wrong</a></p>
+<h2>Typechecking: mypy</h2>
+<p>Type annotations in Python libraries are not yet pervasive, but getting better
+every day.</p>
+<p>Supported by Python's founder, Guido van Rossum, <a href="http://mypy-lang.org/">mypy</a>
+is the de facto standard. The <a href="https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html">cheat sheet</a>
+is a very helpful resource.</p>
+<p>You can configure mypy inside <code>setup.cfg</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[mypy]</span>
+<span class="na">strict</span> <span class="o">=</span> <span class="s">true</span>
+
+<span class="c1"># I prefer to be explicit about ignoring packages which do not yet have types:</span>
+<span class="k">[mypy-psycopg2.*]</span>
+<span class="na">ignore_missing_imports</span> <span class="o">=</span> <span class="s">True</span>
+</code></pre></div>
+
+<h2>Dependency and virtualenv management: poetry</h2>
+<p>Unfortunately because of the way <code>pip</code> installs dependencies, you have to deal
+with virtualenv in most cases (although <a href="https://pdm.fming.dev/">things might change rapidly with pdm</a>).</p>
+<p>Nowadays I'd recommend using <a href="https://python-poetry.org/">poetry</a>. It is not
+yet absolutely perfect, but it provides a very elegant CLI API.</p>
+<p>It's super easy to start a project:</p>
+<div class="highlight"><pre><span></span><code>poetry new service-name
+<span class="nb">cd</span> service-name
+<span class="nv">$EDITOR</span> pyproject.toml
+rm -Rf tests
+mv README.rst README.md
+
+poetry add sqlalchemy  <span class="c1"># for instance</span>
+</code></pre></div>
+
+<p>Then either go into a virtualenv-enabled shell with <code>poetry shell</code> or prefix
+your commands with <code>poetry run ...</code>.</p>
+<h2>Linting: flake8</h2>
+<p>There are two main linters:</p>
+<ul>
+<li><a href="https://flake8.pycqa.org/en/latest/">flake8</a></li>
+<li><a href="https://www.pylint.org/">pylint</a></li>
+</ul>
+<p>I usually rely mostly on flake8 because it has fewer false positives. While
+pylint is super configurable, it includes too many checks to my taste.</p>
+<p>I use the following configuration (in <code>setup.cfg</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">[flake8]</span>
+<span class="na">max-line-length</span> <span class="o">=</span> <span class="s">99</span>
+<span class="na">extend-ignore</span> <span class="o">=</span><span class="s"></span>
+<span class="s">    # See https://github.com/PyCQA/pycodestyle/issues/373</span>
+<span class="s">    E203,</span>
+</code></pre></div>
+
+<h2>Code autoformatting: black and isort</h2>
+<p><a href="https://github.com/psf/black">black</a> autoformats your code so that you don't
+have to think about it.</p>
+<p><a href="https://pycqa.github.io/isort/">isort</a> is a nice addition to black, it will
+sort your imports to comply with <a href="https://www.python.org/dev/peps/pep-0008/#imports">PEP 8</a>:</p>
+<ul>
+<li>Sort alphabetically</li>
+<li>Group into standard imports, third-party imports, app imports</li>
+</ul>
+<p>Here's my isort config to comply with flake8 and black (in
+<code>pyproject.toml</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.isort]</span>
+<span class="n">multi_line_output</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">include_trailing_comma</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">force_grid_wrap</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">use_parentheses</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">ensure_newline_before_comments</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">line_length</span> <span class="o">=</span> <span class="mi">88</span>
+</code></pre></div>
+
+<h2>Test: pytest with coverage</h2>
+<p><a href="https://docs.pytest.org/en/stable/">pytest</a> has a lot of magical features but
+it makes writing tests so efficient. The fixture system is brilliant and
+super powerful. Using plain <code>assert</code> instead of having to learn an <code>assertEqual</code>
+metalanguage makes your life more meaningful.</p>
+<p>Here's the config I use (in <code>pyproject.toml</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">[tool.pytest.ini_options]</span>
+<span class="c1"># Personal preference: I am too used to native traceback</span>
+<span class="n">addopts</span> <span class="o">=</span> <span class="s">&quot;--tb=short&quot;</span>
+
+<span class="k">[tool.coverage.report]</span>
+<span class="n">exclude_lines</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&quot;pragma: no cover&quot;</span><span class="p">,</span>
+    <span class="s">&quot;def __repr__&quot;</span><span class="p">,</span>
+    <span class="s">&quot;if __name__ == .__main__.:&quot;</span><span class="p">,</span>
+    <span class="s">&quot;nocov&quot;</span><span class="p">,</span>
+    <span class="s">&quot;if TYPE_CHECKING:&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="k">[tool.coverage.run]</span>
+<span class="c1"># Activating branch coverage is super important</span>
+<span class="n">branch</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">omit</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="c1"># add your files to omit here</span>
+    <span class="p">]</span>
+</code></pre></div>
+
+<p>I usually use the following plugins and lib:</p>
+<ul>
+<li><a href="https://pytest-factoryboy.readthedocs.io/en/latest/">pytest-factoryboy</a> use
+    factories to create your fixture. Super powerful, and avoids having a single
+    file where all your reusable fixtures are defined a thousand times with
+    different variations.</li>
+<li><a href="https://github.com/pytest-dev/pytest-mock/">pytest-mock</a> makes it easier to
+    work with <code>unittest.mock</code>.</li>
+<li><a href="https://github.com/pytest-dev/pytest-cov">pytest-cov</a> provides coverage
+    reports for your tests.</li>
+<li><a href="https://github.com/uber/doubles">doubles</a>: sadly not maintained anymore (but
+    it still works!), it provides a much simpler and stricter mocking experience
+    than <code>unittest.mock</code>.</li>
+<li><a href="https://requests-mock.readthedocs.io/en/latest/">requests-mock</a> to check
+    integration with HTTP services called with <a href="https://requests.readthedocs.io/en/master/">requests</a>. It automatically integrates with pytest and provides a fixture named <code>requests_mock</code>.</li>
+</ul>
+<h2>Checking docstring: pydocstyle</h2>
+<p><a href="http://www.pydocstyle.org/en/stable/">pydocstyle</a> enforces <a href="https://www.python.org/dev/peps/pep-0257/">PEP
+257</a> for docstring styling.</p>
+<p>Here's my config (in <code>setup.cfg</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">[pydocstyle]</span>
+<span class="c1"># Do not require any docstring</span>
+<span class="n">ignore</span> <span class="o">=</span> <span class="n">D100</span><span class="p">,</span><span class="n">D101</span><span class="p">,</span><span class="n">D102</span><span class="p">,</span><span class="n">D103</span><span class="p">,</span><span class="n">D104</span><span class="p">,</span><span class="n">D105</span><span class="p">,</span><span class="n">D106</span><span class="p">,</span><span class="n">D107</span><span class="p">,</span><span class="n">D213</span><span class="p">,</span><span class="n">D203</span>
+</code></pre></div>
+
+<h2>Logging: structlog</h2>
+<p><a href="https://www.structlog.org/en/stable/">structlog</a> is a must-have for all your
+logging needs.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">structlog</span> <span class="kn">import</span> <span class="n">get_logger</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;saying hello&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># instead of :</span>
+        <span class="c1"># logger.info(&quot;saying hello to %s&quot;, name)</span>
+</code></pre></div>
+
+<p>Structuring your logs has numerous advantages:</p>
+<ul>
+<li>Immediately parsable by automated tools (kibana, m/r jobs, etc.)</li>
+<li>Easier to write: you don't have to think about the order of your logging
+    message</li>
+<li>Flexible: can be further manipulated since all log messages are dicts
+    until they're displayed</li>
+</ul>
+<p>You can create <code>yourapp.lib.log</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">UUID</span>
+
+<span class="kn">import</span> <span class="nn">structlog</span>
+
+<span class="kn">from</span> <span class="nn">yourapp.config</span> <span class="kn">import</span> <span class="n">config</span>
+
+
+<span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">UUID</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can&#39;t serialize </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">add_version</span><span class="p">(</span>
+    <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">method_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">event_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Add version to log message.&quot;&quot;&quot;</span>
+    <span class="n">event_dict</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">git_commit_short</span>
+    <span class="k">return</span> <span class="n">event_dict</span>
+
+
+<span class="k">class</span> <span class="nc">ConsoleRenderer</span><span class="p">(</span><span class="n">structlog</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">ConsoleRenderer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Display shorter uuid</span>
+        <span class="c1"># https://www.structlog.org/en/stable/_modules/structlog/dev.html#ConsoleRenderer</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">UUID</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_repr</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">configure_logger</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">console</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Configure logging.</span>
+
+<span class="sd">    console should be True for console (dev) environment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># see https://stackoverflow.com/questions/37703609/using-python-logging-with-aws-lambda</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">root</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">console</span><span class="p">:</span>
+        <span class="n">processors</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">add_version</span><span class="p">,</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">filter_by_level</span><span class="p">,</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">add_logger_name</span><span class="p">,</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">add_log_level</span><span class="p">,</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">TimeStamper</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M.%S&quot;</span><span class="p">),</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">StackInfoRenderer</span><span class="p">(),</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">format_exc_info</span><span class="p">,</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">JSONRenderer</span><span class="p">(</span><span class="n">serializer</span><span class="o">=</span><span class="n">dumps</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># nocov</span>
+        <span class="n">processors</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">add_logger_name</span><span class="p">,</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">add_log_level</span><span class="p">,</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">PositionalArgumentsFormatter</span><span class="p">(),</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">TimeStamper</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M.%S&quot;</span><span class="p">),</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">StackInfoRenderer</span><span class="p">(),</span>
+            <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">format_exc_info</span><span class="p">,</span>
+            <span class="n">ConsoleRenderer</span><span class="p">(),</span>
+        <span class="p">]</span>
+
+    <span class="n">structlog</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
+        <span class="n">processors</span><span class="o">=</span><span class="n">processors</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+        <span class="n">wrapper_class</span><span class="o">=</span><span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">BoundLogger</span><span class="p">,</span>
+        <span class="n">logger_factory</span><span class="o">=</span><span class="n">structlog</span><span class="o">.</span><span class="n">stdlib</span><span class="o">.</span><span class="n">LoggerFactory</span><span class="p">(),</span>
+        <span class="n">cache_logger_on_first_use</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+
+<h2>Configuration: Pydantic's BaseSettings</h2>
+<p>Like most people, I usually ended up having my own mechanism for handling
+configuration. Thanks to the web framework fastapi, I've discovered that
+<a href="https://pydantic-docs.helpmanual.io/">pydantic</a> provides a very handy
+<a href="https://pydantic-docs.helpmanual.io/usage/settings/">BaseSettings</a> class that
+relies on environment variable for its configuration. <code>BaseSettings</code> provide
+many things that would be annoying to implement from scratch:</p>
+<ul>
+<li>Type hints</li>
+<li>Read from environment variables</li>
+<li>Validate configuration values</li>
+<li><code>.env</code> support with <a href="https://pypi.org/project/python-dotenv/">python-dotenv</a></li>
+<li>Secrets support</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseSettings</span>
+
+<span class="n">ENV_FILENAME</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DOTENV&quot;</span><span class="p">,</span> <span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">MisconfiguredException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
+    <span class="c1"># Please use env_name ONLY for informational purpose (see docs)</span>
+    <span class="n">env_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">git_commit_short</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
+
+    <span class="c1"># Activate this to get profiling - see documentation.</span>
+    <span class="n">is_db_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">db_user</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unconfigured&quot;</span>
+    <span class="n">db_password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unconfigured&quot;</span>
+    <span class="n">db_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;unconfigured&quot;</span>
+    <span class="n">db_port</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;5432&quot;</span>
+    <span class="n">db_host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
+
+    <span class="n">sentry_dsn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">get_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Get the config.&quot;&quot;&quot;</span>
+    <span class="c1"># We follow serverless&#39;s dotenv plugin&#39;s behavior here:</span>
+    <span class="c1"># https://www.npmjs.com/package/serverless-dotenv-plugin</span>
+
+    <span class="c1"># First load .env</span>
+    <span class="n">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="s2">&quot;.env&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">ENV_FILENAME</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Config file </span><span class="si">{</span><span class="n">ENV_FILENAME</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ENV_FILENAME</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.local&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Expected env filename like &#39;.env.dev&#39;, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;got override ending with .local instead: </span><span class="si">{</span><span class="n">ENV_FILENAME</span><span class="si">!r}</span><span class="s2">. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; Try with </span><span class="si">{</span><span class="n">ENV_FILENAME</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.local&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Then load .env.{env}</span>
+    <span class="n">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="n">ENV_FILENAME</span><span class="p">)</span>
+
+    <span class="c1"># Then load .env.{env}.local if it exists</span>
+    <span class="n">override</span> <span class="o">=</span> <span class="n">ENV_FILENAME</span> <span class="o">+</span> <span class="s2">&quot;.local&quot;</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">override</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">load_dotenv</span><span class="p">(</span><span class="n">dotenv_path</span><span class="o">=</span><span class="n">override</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Config</span><span class="p">()</span>
+
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Now you just have to run your commands  like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">DOTENV</span><span class="o">=</span>.env.test poetry run pytest .
+</code></pre></div>
+
+<h2>Error reporting: Sentry</h2>
+<p><a href="https://sentry.io/welcome/">Sentry</a> is a service that provides exception
+monitoring. Its SDK is very simple to integrate.</p>
+<p>Usually, I use the following pattern:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># app.py</span>
+<span class="kn">from</span> <span class="nn">app.lib.log</span> <span class="kn">import</span> <span class="n">configure_logger</span>
+<span class="kn">from</span> <span class="nn">app.lib.sentry</span> <span class="kn">import</span> <span class="n">configure_sentry</span>
+
+<span class="n">configure_logger</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">log_level</span><span class="p">)</span>
+<span class="n">configure_sentry</span><span class="p">()</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="c1"># app.lib.sentry</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">sentry_sdk</span>
+<span class="kn">from</span> <span class="nn">structlog</span> <span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="kn">from</span> <span class="nn">b2b.config</span> <span class="kn">import</span> <span class="n">config</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">configure_sentry</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># nocov</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">sentry_dsn</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;not configuring sentry&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">sentry_sdk</span><span class="o">.</span><span class="n">init</span><span class="p">(</span>
+        <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">dsn</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">sentry_dsn</span><span class="p">,</span>
+        <span class="n">environment</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">env_name</span><span class="p">,</span>
+        <span class="n">traces_sample_rate</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">release</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">git_commit_short</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+
+<h2>Documentation: Docusaurus</h2>
+<p><a href="https://www.sphinx-doc.org/en/master/">Sphinx</a> is another great choice
+(especially if you want to get Python code auto-documentation), but at my
+current company Gens de Confiance we use <a href="https://docusaurus.io/">Docusaurus</a>,
+a powerful yet simple documentation management tool.</p>
+<h2>Domain models, data validation: Pydantic</h2>
+<p><a href="https://pydantic-docs.helpmanual.io/usage/models/">Pydantic Models</a> is
+a flexible way to create your domain model objects:</p>
+<ul>
+<li>Type hinting</li>
+<li>Validators</li>
+<li>Export to json-schema</li>
+</ul>
+<p>You can also use Python's standard lib
+<a href="https://docs.python.org/3/library/dataclasses.html">dataclass</a> together with
+something like <a href="https://marshmallow.readthedocs.io/en/stable/">marshmallow</a>.</p>
+<h2>ORM: sqlalchemy</h2>
+<p>If you need to interact with the DB,
+<a href="https://www.sqlalchemy.org/docs/latest/">sqlalchemy</a> is a very safe choice. It
+comes with loads of features and is the most used non-Django Python ORM, which
+means that you'll find Stack Overflow solution for all your problems. Using
+<a href="https://alembic.sqlalchemy.org/">alembic</a> for DB migrations is the next
+logical move.</p>
+<p>Both libraries are written by the insanely productive <a href="https://github.com/zzzeek">Mike
+Bayer</a>.</p>
+<h2>Web framework: fastapi?</h2>
+<p>You have a lot of excellent choices when it comes to Python web framework.
+I usually prefer microframework and am currently developing with
+<a href="https://fastapi.tiangolo.com/">fastapi</a>, which is a lot of fun to work with.</p>
+<p>I usually refrain from using any plugins that come with the framework, because
+they are usually too coupled to the framework and the context of an HTTP
+request. I might write an article about my preferred setup.</p>
+<h2>Utility functions for functional programming: toolz</h2>
+<p>While Python is not a strict functional programming language, it is possible to
+write FP-styled code with it.  <a href="https://toolz.readthedocs.io/">toolz</a> is
+a great companion and provides many utility functions that make writing code
+easier. It has a curried-by-default namespace (<code>from toolz.curried import
+take</code>). Checkout its <a href="https://toolz.readthedocs.io/en/latest/api.html">cheat
+sheet</a>.</p>
+<h2>ClI framework: typer</h2>
+<p><a href="https://typer.tiangolo.com/">typer</a> (same author as fastapi and pydantic)
+leverages type annotations to make it super easy to write powerful CLI scripts:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;Say hello.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">typer</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">typer</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hello </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">password</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">8</span>
+
+    <span class="k">return</span> <span class="mi">0</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">typer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">)</span>
+</code></pre></div>
+
+<h2>Performance profiling: pyinstrument and sqltap</h2>
+<ul>
+<li><a href="https://github.com/joerick/pyinstrument">pyinstrument</a> is a recent Python
+    profiler which can export to HTML.</li>
+<li><a href="https://github.com/inconshreveable/sqltap">sqltap</a> integrates with
+    sqlalchemy to allow you to introspect SQL queries and also exports to HTML.</li>
+</ul>
+<p>Some services (like Sentry) can also profile code thanks to their SDK.
+Otherwise, you can also rely on the standard library module <a href="https://docs.python.org/3/library/profile.html">profile</a>.</p>
+<h2>Wishlist</h2>
+<ul>
+<li>Lots of inconsistencies for where to put configuration: <code>setup.cfg</code>,
+    <code>pyproject.toml</code>, specific files, etc.</li>
+<li>The more complex the library, the more useful it would be to have type
+    annotations and... the less probable it is to have those annotations.
+    Libraries such as sqlalchemy (coming in 2.0) and toolz don't have official types for now.</li>
+<li>mypy encourages nominal subtyping (see <a href="https://mypy.readthedocs.io/en/stable/faq.html#can-i-use-duck-typing-with-mypy">this FAQ</a>) which is a bit sad because it discourages using simple dicts. Fortunately something like <a href="https://www.python.org/dev/peps/pep-0589/">PEP 589 TypeDict</a> will improve things.</li>
+<li>It would be so nice to avoid having to use virtualenv (even through
+    something like poetry or pipenv). First-time Python developers get so
+    confused about them (compared to Node's simpler <code>node_modules</code> setup). I'm really looking forward to seeing <a href="https://www.python.org/dev/peps/pep-0582/">PEP
+    582</a> deployed.</li>
+</ul>
+<h2>Missing something?</h2>
+<p>Drop me an email at <code>charles at dein.fr</code> if you think I'm missing something!</p>
+<p>For more resources related to Python, check out my repo
+<a href="https://github.com/charlax/python-education">charlax/python-education</a>.</p>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="./archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="./categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
