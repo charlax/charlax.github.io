@@ -8,9 +8,9 @@ building a web app with Python. For now, this is mostly a checklist with some
 obvious recommendations.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Why not a template repo instead of a checklist?&lt;/strong&gt; Template repositories (e.g.
 built with &lt;a href="https://github.com/cookiecutter/cookiecutter"&gt;cookiecutter&lt;/a&gt;) go
-quickly out of date and prevent learning about the in and out of all those best
-practices. They might make sense for your organization, but they're not the
-point of this article.&lt;/p&gt;
+quickly out of date and discourage learning about the ins and outs of all those
+best practices. They might make sense for your organization, but they're not
+the point of this article.&lt;/p&gt;
 &lt;h2&gt;Summary&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Development tasks: &lt;code&gt;Makefile&lt;/code&gt;&lt;/li&gt;
