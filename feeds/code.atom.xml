@@ -465,7 +465,7 @@ a great companion and provides many utility functions that make writing code
 easier. It has a curried-by-default namespace (&lt;code&gt;from toolz.curried import
 take&lt;/code&gt;). Checkout its &lt;a href="https://toolz.readthedocs.io/en/latest/api.html"&gt;cheat
 sheet&lt;/a&gt;.&lt;/p&gt;
-&lt;h2&gt;ClI framework: typer&lt;/h2&gt;
+&lt;h2&gt;CLI framework: typer&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://typer.tiangolo.com/"&gt;typer&lt;/a&gt; (same author as fastapi and pydantic)
 leverages type annotations to make it super easy to write powerful CLI scripts:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
